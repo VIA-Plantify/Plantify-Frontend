@@ -16,6 +16,7 @@ router.post(
 router.post(
     "/register",
     registerHandler
+
 );
 
 export default router;
