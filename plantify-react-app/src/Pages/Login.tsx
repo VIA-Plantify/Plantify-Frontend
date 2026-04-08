@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import logo from '../assets/plantifylogotransp.png'
 import "./Stylesheets/Login.css";
 import Cookies from 'js-cookie';
-import { login } from "../api/authApi";
+import {getErrorMessage, login} from "../api/authApi";
 
 export function Login() {
     console.log("Initial render - checking cookies:", {
@@ -13,11 +13,14 @@ export function Login() {
     const [emailOrUsername, setEmailOrUsername] = useState("");
     const [password, setPassword] = useState("");
     const [userData, setUserData] = useState<{username: string; email: string} | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     const clearFields = () => {
         setEmailOrUsername("");
         setPassword("");
+        setUserData(null);
     }
 
     useEffect(() => {
@@ -145,7 +148,8 @@ export function Login() {
 
     }, []);
     const handleLogin = async () => {
-
+    setError(null);
+    setIsLoading(true);
         try {
             const isEmail=emailOrUsername.includes("@")
             const response = await login({
@@ -168,8 +172,11 @@ export function Login() {
             setUserData(userInfo);
             clearFields();
 
-        } catch  {
-            alert("Login failed");
+        } catch (error) {
+            const errorInfo=getErrorMessage(error)
+            setError(errorInfo.message)
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -196,9 +203,16 @@ export function Login() {
                     <br/>
                     <input className="button" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
                     <br/>
+                    {error && (
+                        <div className="error-text">
+                            {error}
+                        </div>
+                    )}
+                    <br/>
                     <Link className="link" to="/Register">Forgot password?</Link>
                     <br/>
-                    <button className="button2" type="submit" onClick={() => {handleLogin(); clearFields();}}>Login</button>
+                    <button className="button2" type="submit" onClick={() => {handleLogin();}} disabled={isLoading}> {isLoading ? "Logging in..." : "Login" }
+                        </button>
                     <br/>
                     <p>Don't have an account yet? <Link className="link" to="/Register">Sign up</Link></p>
                 </>
