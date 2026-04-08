@@ -10,15 +10,13 @@ export function Login() {
         token: Cookies.get('token'),
         user: Cookies.get('user')
     });
-    const [email, setEmail] = useState("");
-    const [username, setUsername] = useState("");
+    const [emailOrUsername, setEmailOrUsername] = useState("");
     const [password, setPassword] = useState("");
     const [userData, setUserData] = useState<{username: string; email: string} | null>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     const clearFields = () => {
-        setEmail("");
-        setUsername("");
+        setEmailOrUsername("");
         setPassword("");
     }
 
@@ -149,11 +147,15 @@ export function Login() {
     const handleLogin = async () => {
 
         try {
-            const response = await login({ email, username, password });
+            const isEmail=emailOrUsername.includes("@")
+            const response = await login({
+                email: isEmail ? emailOrUsername : "",
+            username : !isEmail ? emailOrUsername: "",
+            password});
 
             const userInfo = {
-                username: response.data.username || username,
-                email: response.data.email || email
+                username: response.data.username || emailOrUsername,
+                email: response.data.email || emailOrUsername
             };
 
             Cookies.set('user', JSON.stringify(userInfo), {
@@ -189,10 +191,7 @@ export function Login() {
                 {!userData && (
                 <>
 
-                    <input className="button" type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value) } />
-                    <br/>
-                    <br/>
-                    <input className="button" type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <input className="button" type="text" placeholder="Email or Username" value={emailOrUsername} onChange={(e) => setEmailOrUsername(e.target.value) } />
                     <br/>
                     <br/>
                     <input className="button" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />

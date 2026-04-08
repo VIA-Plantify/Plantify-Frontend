@@ -125,3 +125,12 @@ a, a:visited, a:hover, a:active, a:focus {
     position: relative;
     z-index: 2;
 }
+
+
+.password-validation .valid {
+    color: #11ae5e;
+}
+
+.password-validation .invalid {
+    color: #ff4444;
+}

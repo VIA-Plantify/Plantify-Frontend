@@ -11,6 +11,7 @@ export function Register()
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
+    const [isPasswordFocused, setIsPasswordFocused] = useState(false);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const clearFields = () => {
         setEmail("");
@@ -18,7 +19,15 @@ export function Register()
         setPassword("");
         setName("");
     }
+const  validatePassword=(pwd: string) => {
+        return{
+            length: pwd.length >= 8 && pwd.length <= 64,
+            numberSpecial: /[0-9]/.test(pwd) && /[!@#$%^&*()*+\-]/.test(pwd),
+            upperLower:/[A-Z]/.test(pwd) && /[a-z]/.test(pwd)
+        };
+};
 
+    const passwordValidation = validatePassword(password);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -158,7 +167,28 @@ export function Register()
                 <input className="button" type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
                 <br/>
                 <br/>
-                <input className="button" type="text" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                <input
+                    className="button"
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onFocus={() => setIsPasswordFocused(true)}
+                    onBlur={() => setIsPasswordFocused(false)}
+                />
+                {isPasswordFocused && (
+                    <div className="password-validation">
+                        <p className={passwordValidation.length ? "valid" : "invalid"}>
+                            {passwordValidation.length ? "✓" : "✗"} Password must be between 8 and 64 characters
+                        </p>
+                        <p className={passwordValidation.numberSpecial ? "valid" : "invalid"}>
+                            {passwordValidation.numberSpecial ? "✓" : "✗"} Password must contain at least one number and one special character
+                        </p>
+                        <p className={passwordValidation.upperLower ? "valid" : "invalid"}>
+                            {passwordValidation.upperLower ? "✓" : "✗"} Password must contain at least one uppercase and one lowercase letter
+                        </p>
+                    </div>
+                )}
                 <br/>
                 <br/>
                 <input className="button" type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
