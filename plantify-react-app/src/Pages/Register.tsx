@@ -2,7 +2,7 @@ import {useEffect, useRef, useState} from 'react';
 import {Link} from "react-router-dom";
 import logo from '../assets/plantifylogotransp.png'
 
-import { register } from "../api/authApi";
+import {getErrorMessage, register} from "../api/authApi";
 import "./Stylesheets/Register.css";
 
 export function Register()
@@ -12,12 +12,15 @@ export function Register()
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
     const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const clearFields = () => {
         setEmail("");
         setUsername("");
         setPassword("");
         setName("");
+        setError(null);
     }
 const  validatePassword=(pwd: string) => {
         return{
@@ -140,18 +143,26 @@ const  validatePassword=(pwd: string) => {
         };
     }, []);
     const handleRegister = async () => {
+        setError(null);
+        setIsLoading(true);
+        try {
+            await register({
 
-        await register({
+                email,
+                password,
+                username,
+                name
 
-            email,
-            password,
-            username,
-            name
+            });
 
-        });
-
-        alert("registered");
-
+            alert("Registered successfully!");
+            clearFields();
+        }catch(error) {
+            const errorInfo=getErrorMessage(error);
+            setError(errorInfo.message);
+        }finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -194,7 +205,15 @@ const  validatePassword=(pwd: string) => {
                 <input className="button" type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
                 <br/>
                 <br/>
-                <button className="button2" type="submit" onClick={() => {handleRegister(); clearFields();}}>Create account</button>
+                {
+                    error && (
+                        <div className="error-text">
+                            {error}
+                        </div>
+                    )}
+                <br/>
+                <button className="button2" type="submit" onClick={() => {handleRegister(); clearFields();}}
+                        disabled={isLoading}>{isLoading ? "Creating account..." : "Create account"}</button>
                 <br/>
                 <br/>
                 <p>Have an account already?? <Link className="link" to="/">Log in</Link></p>
