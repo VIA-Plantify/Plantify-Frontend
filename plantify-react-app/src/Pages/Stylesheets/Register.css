@@ -1,0 +1,106 @@
+.logo{
+    margin-top: 20%;
+    max-width: 10%;
+    width: auto;
+}
+
+.button {
+    display: inline-block;
+    width: 45%;
+    padding: 12px 24px;
+    color: #11ae5e;
+    border: solid 4px #11ae5e;
+    border-radius: 24px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    background-color: transparent;
+
+}
+
+input {
+    caret-color: white;
+    text-shadow: 0 0 1px currentColor;
+    font-weight: bold;
+}
+
+input::placeholder {
+    color: #11ae5e;
+    opacity: 0.8;
+}
+input:hover::placeholder {
+    color: white;
+    opacity: 0.8;
+}
+
+.button:hover {
+    background-color: #11ae5e;
+    transition: all 0.3s ease
+}
+
+.button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px #11ae5e;
+}
+body {
+    background-color: white;
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+}
+
+.input {
+    background-color: transparent;
+}
+.login-container {
+    background-color: white;
+    min-height: 100vh;
+}
+.link{
+    text-decoration: none;
+    text-decoration-color: #11ae5e;
+}
+a, a:visited, a:hover, a:active, a:focus {
+    color: #11ae5e;
+    text-decoration: none;
+    outline: none;
+}
+
+.forgot-link, .forgot-link:visited, .forgot-link:hover, .forgot-link:active {
+    color: #666;
+    text-decoration: none;
+}
+
+.signup-link, .signup-link:visited, .signup-link:hover, .signup-link:active {
+    color: #11ae5e;
+    text-decoration: none;
+}
+.button2{
+    display: inline-block;
+    padding: 12px 24px;
+    width: 50%;
+    height: 35%;
+    color: white;
+    border: solid 4px #11ae5e;
+    border-radius: 24px;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    background-color: #11ae5e;
+}
+.button2:hover {
+    background-color: #11ae5e;
+    color: white;
+    transition: all 0.3s ease
+}
+
+.button2:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
+}
