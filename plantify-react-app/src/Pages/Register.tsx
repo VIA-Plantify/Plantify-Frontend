@@ -45,7 +45,8 @@ export function Register()
                 <button className="button2" type="submit" onClick={handleRegister}>Create account</button>
                 <br/>
                 <br/>
-                <p>Have an account already? <Link className="link" to="/">Log in</Link></p>
+                <p>Have an account already?? <Link className="link" to="/">Log in</Link></p>
+
             </div>
         </div>
     );
