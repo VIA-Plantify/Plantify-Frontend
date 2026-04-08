@@ -1,4 +1,5 @@
 import { Router } from "express";
+
 import {
 
     loginHandler,
@@ -16,7 +17,6 @@ router.post(
 router.post(
     "/register",
     registerHandler
-
 );
 
 export default router;
