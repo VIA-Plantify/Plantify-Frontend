@@ -1,18 +1,15 @@
 import { Request, Response } from "express";
 
-const API_URL =
-    "https://localhost:5001/api/auth";
+const API_URL = "http://localhost:8081";
 
 export const registerHandler =
-    async (
-        req: Request,
-        res: Response
-    ) => {
+    async (req: Request, res: Response) => {
 
-        const response =
-            await fetch(
+        try {
 
-                `${API_URL}/register`,
+            const response = await fetch(
+
+                `${API_URL}/User`,
 
                 {
 
@@ -20,62 +17,63 @@ export const registerHandler =
 
                     headers: {
 
-                        "Content-Type":
-                            "application/json"
+                        "Content-Type": "application/json"
 
                     },
 
-                    body:
-                        JSON.stringify(req.body)
+                    body: JSON.stringify({
+
+                        email: req.body.email,
+                        password: req.body.password,
+
+                        // required by CreateUserDto
+                        username: req.body.username ?? req.body.email,
+                        name: req.body.name ?? req.body.email
+
+                    })
 
                 }
 
             );
 
-        if (!response.ok) {
+            if (!response.ok) {
 
-            return res
-                .status(400)
-                .send("register error");
+                const text = await response.text();
 
-        }
-
-        const data =
-            await response.json();
-
-        res.cookie(
-
-            "token",
-
-            data.token,
-
-            {
-
-                httpOnly: true,
-                secure: false
+                return res
+                    .status(response.status)
+                    .send(text);
 
             }
 
-        );
+            const data = await response.json();
 
-        res.json({
+            res.json({
 
-            success: true
+                success: true,
+                user: data
 
-        });
+            });
+
+        }
+        catch (error) {
+
+            res.status(500)
+                .send("register proxy error");
+
+        }
 
     };
 
+
 export const loginHandler =
-    async (
-        req: Request,
-        res: Response
-    ) => {
+    async (req: Request, res: Response) => {
 
-        const response =
-            await fetch(
+        try {
 
-                `${API_URL}/login`,
+            const response = await fetch(
+
+                `${API_URL}/Auth/login`,
 
                 {
 
@@ -83,48 +81,62 @@ export const loginHandler =
 
                     headers: {
 
-                        "Content-Type":
-                            "application/json"
+                        "Content-Type": "application/json"
 
                     },
 
-                    body:
-                        JSON.stringify(req.body)
+                    body: JSON.stringify({
+
+                        email: req.body.email,
+                        username: req.body.username,
+                        password: req.body.password
+
+                    })
 
                 }
 
             );
 
-        if (!response.ok) {
+            if (!response.ok) {
 
-            return res
-                .status(401)
-                .send("invalid login");
+                const text = await response.text();
 
-        }
-
-        const data =
-            await response.json();
-
-        res.cookie(
-
-            "token",
-
-            data.token,
-
-            {
-
-                httpOnly: true,
-                secure: false
+                return res
+                    .status(401)
+                    .send(text);
 
             }
 
-        );
+            const token = await response.text();
 
-        res.json({
+            res.cookie(
 
-            success: true
+                "token",
 
-        });
+                token,
+
+                {
+
+                    httpOnly: true,
+                    secure: false,
+                    sameSite: "lax"
+
+                }
+
+            );
+
+            res.json({
+
+                success: true
+
+            });
+
+        }
+        catch (error) {
+
+            res.status(500)
+                .send("login proxy error");
+
+        }
 
     };

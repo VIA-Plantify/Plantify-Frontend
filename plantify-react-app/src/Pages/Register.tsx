@@ -8,13 +8,17 @@ export function Register()
 {
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [name, setName] = useState("");
 
     const handleRegister = async () => {
 
         await register({
 
             email,
-            username
+            password,
+            username,
+            name
 
         });
 
@@ -30,6 +34,12 @@ export function Register()
                 <br/>
                 <br/>
                 <input className="button" type="text" placeholder="Username" onChange={(e) => setUsername(e.target.value)} />
+                <br/>
+                <br/>
+                <input className="button" type="text" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
+                <br/>
+                <br/>
+                <input className="button" type="text" placeholder="Name" onChange={(e) => setName(e.target.value)} />
                 <br/>
                 <br/>
                 <button className="button2" type="submit" onClick={handleRegister}>Create account</button>
