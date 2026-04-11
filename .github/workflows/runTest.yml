@@ -14,11 +14,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Use Node.js
+    - name: Node.js
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
 
     - name: Install Server deps
       working-directory: ./Server
