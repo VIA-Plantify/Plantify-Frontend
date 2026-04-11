@@ -5,5 +5,8 @@
   "workspaceFolder": "/workspace",
   "shutdownAction": "none",
   "updateRemoteUserUID": false,
-  "postCreateCommand": "cd plantify-react-app && npm install && npx playwright install --with-deps && cd ../Server && npm install"
+  "postCreateCommand": "cd plantify-react-app && npm install && npx playwright install --with-deps && cd ../Server && npm install",
+  "mounts": [
+    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+  ]
 }
