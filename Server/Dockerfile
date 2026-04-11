@@ -32,4 +32,4 @@ COPY --from=build /app/dist ./dist
 
 EXPOSE 5021
 
-CMD ["node", "dist/server.js"]
+CMD ["node", "dist/index.js"]
