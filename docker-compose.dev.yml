@@ -1,0 +1,16 @@
+name: dev
+
+services:
+    frontenddev:
+      image: frontend:dev
+      build:
+        context: .
+        dockerfile: .devcontainer/Dockerfile
+      container_name: frontenddev
+      volumes:
+        - .:/workspace
+      working_dir: /workspace
+      command: sleep infinity
+      user: root
+      ports:
+        - "5173:5173"

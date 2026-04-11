@@ -5,10 +5,13 @@ import authRoutes from "./routes/authRoutes";
 
 const app = express();
 
+const ORIGIN  = process.env.ORIGIN;
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: ORIGIN,
     credentials: true
 }));
+
+const PORT  = process.env.PORT;
 
 app.use(express.json());
 app.use(cookieParser());
@@ -19,6 +22,6 @@ app.get("/test", (req , res) => {
     res.json({ message: "Server is working" });
 });
 
-app.listen(3021, () => {
+app.listen(PORT, () => {
     console.log("BFF running on port 3021");
 });
