@@ -216,7 +216,7 @@ export function Login() {
                     <br/>
                     <p>Don't have an account yet? <Link className="link" to="/Register">Sign up</Link></p>
                 </>
-                    )};
+                    )}
 
                 {userData && (
                     <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', marginTop: '100px' }}>
