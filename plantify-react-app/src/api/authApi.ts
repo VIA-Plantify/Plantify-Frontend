@@ -1,9 +1,8 @@
 import axios from "axios";
 
-const VITE_SERVER_URL :string = import.meta.env.VITE_SERVER_URL;
 const api = axios.create({
 
-    baseURL: VITE_SERVER_URL,
+    baseURL: "/api",
     withCredentials: true
 
 });
