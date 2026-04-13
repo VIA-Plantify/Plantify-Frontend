@@ -5,12 +5,7 @@
   "workspaceFolder": "/workspace",
   "shutdownAction": "none",
   "updateRemoteUserUID": false,
-  "postCreateCommand": [
-    "bash -lc 'chmod +x /workspace/.scripts/*.sh'",
-    "bash -lc 'bash /workspace/.scripts/setup-dev.sh'",
-    "bash -lc 'cd /workspace/plantify-react-app && npm install && npx playwright install --with-deps'",
-    "bash -lc 'cd /workspace/Server && npm install'"
-  ],
+  "postCreateCommand": "bash -lc 'chmod +x /workspace/.scripts/*.sh && /workspace/.scripts/setup-dev.sh && cd /workspace/plantify-react-app && npm install && npx playwright install --with-deps && cd /workspace/Server && npm install'",
   "mounts": [
     "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
   ]
