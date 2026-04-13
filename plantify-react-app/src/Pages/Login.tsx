@@ -9,7 +9,7 @@ export function Login() {
     console.log("Initial render - checking cookies:", {
         token: Cookies.get('token'),
         user: Cookies.get('user')
-    });
+    });console.log("sadasddssadasdsassda");
     const [emailOrUsername, setEmailOrUsername] = useState("");
     const [password, setPassword] = useState("");
     const [userData, setUserData] = useState<{username: string; email: string} | null>(null);
@@ -20,7 +20,6 @@ export function Login() {
     const clearFields = () => {
         setEmailOrUsername("");
         setPassword("");
-        setUserData(null);
     }
 
     useEffect(() => {
@@ -148,18 +147,22 @@ export function Login() {
 
     }, []);
     const handleLogin = async () => {
-    setError(null);
-    setIsLoading(true);
+        setError(null);
+        setIsLoading(true);
         try {
-            const isEmail=emailOrUsername.includes("@")
+            const isEmail = emailOrUsername.includes("@")
             const response = await login({
-                email: isEmail ? emailOrUsername : "",
-            username : !isEmail ? emailOrUsername: "",
-            password});
+                email: isEmail ? emailOrUsername : undefined,
+                username: !isEmail ? emailOrUsername : undefined,
+                password
+            });
+            console.log("response.data", response.data);
+
+            Cookies.remove('user', { path: '/' });
 
             const userInfo = {
-                username: response.data.username || emailOrUsername,
-                email: response.data.email || emailOrUsername
+                username: response.data.username,
+                email: response.data.email
             };
 
             Cookies.set('user', JSON.stringify(userInfo), {
@@ -173,7 +176,8 @@ export function Login() {
             clearFields();
 
         } catch (error) {
-            const errorInfo=getErrorMessage(error)
+            console.log("login error:", error)
+            const errorInfo = getErrorMessage(error)
             setError(errorInfo.message)
         } finally {
             setIsLoading(false);
