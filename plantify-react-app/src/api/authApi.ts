@@ -32,17 +32,12 @@ export interface RegisterRequest {
 
 
 
-export const login = (
+export const login = (data: LoginRequest) => api.post("/auth/login", {
+    ...(data.email && { email: data.email }),
+    ...(data.username && { username: data.username }),
+    password: data.password
+});
 
-    data: LoginRequest
-
-) => api.post(
-
-    "/auth/login",
-
-    data
-
-);
 export interface ApiError {
     status: number;
     message: string;
