@@ -5,6 +5,7 @@ Frontend of Plantify
 ```
 jdbc:postgresql://localhost:55432/plantify?password=plantifydev&user=dev 
 ```
+
 <h3>From container</h3>
 
 ```
