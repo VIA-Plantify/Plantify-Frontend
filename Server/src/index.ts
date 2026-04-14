@@ -23,5 +23,5 @@ app.get("/test", (req , res) => {
 });
 
 app.listen(PORT, () => {
-    console.log("BFF running on port 3021");
+    console.log("BFF running on port 5021");
 });

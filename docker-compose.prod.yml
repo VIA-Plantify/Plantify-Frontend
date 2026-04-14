@@ -17,7 +17,7 @@ services:
     expose:
       - "5021"
     networks:
-      - backend
+      - plantify-network
 
   reactapp:
     build:
@@ -32,8 +32,8 @@ services:
     ports:
       - "5174:5174"
     networks:
-      - backend
+      - plantify-network
 
 networks:
-  backend:
+  plantify-network:
     external: true
