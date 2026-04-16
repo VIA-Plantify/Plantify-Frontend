@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-
+import dotenv from "dotenv";
+dotenv.config();
 const API_URL = process.env.API_URL;
-
 export const registerHandler =
     async (req: Request, res: Response) => {
 

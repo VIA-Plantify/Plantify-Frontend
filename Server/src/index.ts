@@ -2,7 +2,8 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/authRoutes";
-
+import dotenv from "dotenv";
+dotenv.config();
 const app = express();
 
 const ORIGIN  = process.env.ORIGIN;
@@ -23,5 +24,5 @@ app.get("/test", (req , res) => {
 });
 
 app.listen(PORT, () => {
-    console.log("BFF running on port 5021");
+    console.log(`BFF running on port ${PORT}`);
 });
