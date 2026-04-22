@@ -2,9 +2,9 @@ FROM node:20-alpine AS build
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y git
+RUN apk add --no-cache git
 
-RUN git clone -b main https://github.com/VIA-Plantify/Plantify-Frontend.git
+RUN git clone -b main https://github.com/VIA-Plantify/Plantify-Frontend.git .
 
 COPY package*.json ./
 RUN npm ci
