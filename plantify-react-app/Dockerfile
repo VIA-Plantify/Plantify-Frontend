@@ -19,7 +19,7 @@ FROM nginx:1.27-alpine AS production
 
 RUN rm -rf /usr/share/nginx/html/*
 
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/plantify-react-app/dist /usr/share/nginx/html
 
 EXPOSE 80
 
