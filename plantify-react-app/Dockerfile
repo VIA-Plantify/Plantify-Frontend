@@ -8,6 +8,9 @@ RUN git clone -b main https://github.com/VIA-Plantify/Plantify-Frontend.git .
 
 WORKDIR /app/plantify-react-app
 
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
 COPY package*.json ./
 RUN npm ci
 
