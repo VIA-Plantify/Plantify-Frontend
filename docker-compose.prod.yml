@@ -10,8 +10,6 @@ services:
         VITE_SERVER_URL: http://webapi:8081
     container_name: reactapp
     image: reactapp:latest
-    depends_on:
-      - nodeserver
     ports:
       - "5174:5174"
     networks:
