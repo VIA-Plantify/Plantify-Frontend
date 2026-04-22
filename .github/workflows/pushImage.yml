@@ -26,6 +26,8 @@ jobs:
           context: ./plantify-react-app
           file: ./plantify-react-app/Dockerfile
           push: true
-          tags: ghcr.io/via-plantify/plantify-frontend/reactapp:latest
+          tags: |
+               ghcr.io/via-plantify/plantify-frontend/reactapp:latest
+               ghcr.io/via-plantify/plantify-frontend/reactapp:${{ github.sha }}
           build-args: |
-            VITE_API_URL=${{ secrets.VITE_API_URL }}
+               VITE_API_URL=${{ secrets.VITE_API_URL }}
