@@ -31,3 +31,4 @@ jobs:
                ghcr.io/via-plantify/plantify-frontend/reactapp:${{ github.sha }}
           build-args: |
                VITE_API_URL=${{ secrets.VITE_API_URL }}
+               
