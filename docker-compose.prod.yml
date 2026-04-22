@@ -8,7 +8,7 @@ services:
       dockerfile: Dockerfile.local
     container_name: reactapp
     environment:
-      VITE_SERVER_URL: http://webapi:8081
+      VITE_API_URL: http://webapi:8081
       VITE_PORT: 5174
     image: reactapp:latest
     ports:
