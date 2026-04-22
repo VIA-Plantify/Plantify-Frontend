@@ -3,7 +3,7 @@ FROM node:20-alpine AS build
 WORKDIR /app
 
 RUN apk add --no-cache git
-RUN git clone -b azure-fix https://github.com/VIA-Plantify/Plantify-Frontend.git .
+RUN git clone -b main https://github.com/VIA-Plantify/Plantify-Frontend.git .
 
 WORKDIR /app/plantify-react-app
 
