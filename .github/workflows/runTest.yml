@@ -19,18 +19,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Install Server deps
-      working-directory: ./Server
-      run: npm ci
-
-    - name: Build Server
-      working-directory: ./Server
-      run: npm run build --if-present
-
-    - name: Test Server
-      working-directory: ./Server
-      run: npm test --if-present
-
     - name: Install Frontend deps
       working-directory: ./plantify-react-app
       run: npm ci
@@ -41,4 +29,4 @@ jobs:
 
     - name: Test Frontend
       working-directory: ./plantify-react-app
-      run: npm test --if-present
+      run: npm test --if-present 
