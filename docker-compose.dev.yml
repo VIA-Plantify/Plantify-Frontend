@@ -7,6 +7,9 @@ services:
         context: .
         dockerfile: .devcontainer/Dockerfile
       container_name: frontenddev
+      environment:
+        API_URL: http://host.docker.internal:8081
+        PORT: 3021
       volumes:
         - .:/workspace
       working_dir: /workspace
