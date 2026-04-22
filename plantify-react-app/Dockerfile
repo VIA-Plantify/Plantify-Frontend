@@ -4,7 +4,9 @@ WORKDIR /app
 
 RUN apk add --no-cache git
 
-RUN git clone -b Removing-NodeServer https://github.com/VIA-Plantify/Plantify-Frontend.git ./plantify-react-app
+RUN git clone -b Removing-NodeServer https://github.com/VIA-Plantify/Plantify-Frontend.git .
+
+WORKDIR /app/plantify-react-app
 
 COPY package*.json ./
 RUN npm ci
