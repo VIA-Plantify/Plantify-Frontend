@@ -2,35 +2,17 @@ name: plantify_production
 
 services:
 
-  nodeserver:
-    build:
-      context: ./Server
-      dockerfile: Dockerfile
-    container_name: nodeserver
-    image: nodeserver:latest
-    environment:
-      NODE_ENV: production
-      PORT: 5021
-      API_URL: http://webapi:8081
-    ports:
-      - "5021:5021"
-    expose:
-      - "5021"
-    networks:
-      - plantify-network
-
   reactapp:
     build:
       context: ./plantify-react-app
-      dockerfile: Dockerfile
-      args:
-        VITE_SERVER_URL: http://nodeserver:5021
+      dockerfile: Dockerfile.local
     container_name: reactapp
+    environment:
+      VITE_SERVER_URL: http://webapi:8081
+      VITE_PORT: 5174
     image: reactapp:latest
-    depends_on:
-      - nodeserver
     ports:
-      - "5174:5174"
+      - "5174:80"
     networks:
       - plantify-network
 

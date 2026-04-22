@@ -19,14 +19,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Install Server deps
-      working-directory: ./Server
-      run: npm ci
-
-    - name: Build Server
-      working-directory: ./Server
-      run: npm run build --if-present
-
     - name: Install Frontend deps
       working-directory: ./plantify-react-app
       run: npm ci
