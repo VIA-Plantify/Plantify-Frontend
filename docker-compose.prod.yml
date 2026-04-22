@@ -5,7 +5,7 @@ services:
   reactapp:
     build:
       context: ./plantify-react-app
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.local
     container_name: reactapp
     environment:
       VITE_SERVER_URL: http://webapi:8081
