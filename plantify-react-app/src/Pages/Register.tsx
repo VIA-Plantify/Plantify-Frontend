@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 import logo from '../assets/plantifylogotransp.png'
 
 import {getErrorMessage, register} from "../api/authApi";
-import "./Stylesheets/Register.css";
+import styles from "./Stylesheets/Register.module.css";
 
 export function Register()
 {
@@ -166,20 +166,17 @@ const  validatePassword=(pwd: string) => {
     };
 
     return (
-        <div className='login-container'>
+        <div className={styles["register-container"]}>
             <canvas
-                ref={canvasRef}
+                ref={canvasRef} className={styles["register-canvas"]}
             />
-            <img className="logo" src={logo} alt="Logo"></img>
-            <div>
-                <input className="button" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)}/>
-                <br/>
-                <br/>
-                <input className="button" type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-                <br/>
-                <br/>
+            <div className={styles["register-content"]}>
+            <img className={styles.logo} src={logo} alt="Logo"></img>
+            <div className={styles["form-container"]}>
+                <input className={styles.button} type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                <input className={styles.button} type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
                 <input
-                    className="button"
+                    className={styles.button}
                     type="password"
                     placeholder="Password"
                     value={password}
@@ -188,37 +185,31 @@ const  validatePassword=(pwd: string) => {
                     onBlur={() => setIsPasswordFocused(false)}
                 />
                 {isPasswordFocused && (
-                    <div className="password-validation">
-                        <p className={passwordValidation.length ? "valid" : "invalid"}>
+                    <div className={styles["password-validation"]}>
+                        <p className={passwordValidation.length ? styles.valid : styles.invalid}>
                             {passwordValidation.length ? "✓" : "✗"} Password must be between 8 and 64 characters
                         </p>
-                        <p className={passwordValidation.numberSpecial ? "valid" : "invalid"}>
+                        <p className={passwordValidation.numberSpecial ? styles.valid : styles.invalid}>
                             {passwordValidation.numberSpecial ? "✓" : "✗"} Password must contain at least one number and one special character
                         </p>
-                        <p className={passwordValidation.upperLower ? "valid" : "invalid"}>
+                        <p className={passwordValidation.upperLower ? styles.valid : styles.invalid}>
                             {passwordValidation.upperLower ? "✓" : "✗"} Password must contain at least one uppercase and one lowercase letter
                         </p>
                     </div>
                 )}
-                <br/>
-                <br/>
-                <input className="button" type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
-                <br/>
-                <br/>
+                <input className={styles.button} type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
                 {
                     error && (
-                        <div className="error-text">
+                        <div className={styles["error-text"]}>
                             {error}
                         </div>
                     )}
-                <br/>
-                <button className="button2" type="submit" onClick={() => {handleRegister(); clearFields();}}
+                <button className={styles.button2} type="submit" onClick={() => {handleRegister(); clearFields();}}
                         disabled={isLoading}>{isLoading ? "Creating account..." : "Create account"}</button>
-                <br/>
-                <br/>
-                <p>Have an account already?? <Link className="link" to="/">Log in</Link></p>
+                <p className={styles.color}>Have an account already? <Link className="link" to="/">Log in</Link></p>
 
             </div>
+        </div>
         </div>
     );
 }
