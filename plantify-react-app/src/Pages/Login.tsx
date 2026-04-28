@@ -1,11 +1,12 @@
 import {useEffect, useRef, useState} from 'react';
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import logo from '../assets/plantifylogotransp.png'
 import styles from "./Stylesheets/Login.module.css";
 import Cookies from 'js-cookie';
 import {getErrorMessage, login} from "../api/authApi";
 
 export function Login() {
+    const navigate = useNavigate();
     console.log("Initial render - checking cookies:", {
         token: Cookies.get('token'),
         user: Cookies.get('user')
@@ -53,27 +54,41 @@ export function Login() {
             radius: number;
             opacity: number;
             maxRadius: number;
+            centerX: number;
+            centerY: number;
         }
 
         let waves: Wave[] = [];
+        const getLogoPosition = (): { x: number; y: number } => {
+            const logoElement = document.querySelector(`.${styles.logo}`);
+            if (logoElement && canvas) {
+                const logoRect = logoElement.getBoundingClientRect();
+                const canvasRect = canvas.getBoundingClientRect();
+                return {
+                    x: logoRect.left + logoRect.width / 2 - canvasRect.left,
+                    y: logoRect.top + logoRect.height * 0.7 - canvasRect.top
+                };
+            }
+            return { x: canvas.width / 2, y: canvas.height / 2 };
+        };
 
-        const getMaxRadius = () => {
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
+        const getMaxRadius = (centerX: number, centerY: number) => {
             const cornerX = Math.max(centerX, canvas.width - centerX);
             const cornerY = Math.max(centerY, canvas.height - centerY);
             return Math.sqrt(cornerX * cornerX + cornerY * cornerY);
         };
 
         const addWave = () => {
+            const logoPos = getLogoPosition();
             waves.push({
                 radius: 8,
                 opacity: 0.55,
-                maxRadius: getMaxRadius() + 60
+                maxRadius: getMaxRadius(logoPos.x, logoPos.y) + 60,
+                centerX: logoPos.x,
+                centerY: logoPos.y
             });
         };
 
-        addWave();
 
         let frameCounter = 0;
         const framesBetweenWaves = 280;
@@ -85,31 +100,27 @@ export function Login() {
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-
             for (let i = 0; i < waves.length; i++) {
                 const wave = waves[i];
 
                 wave.radius += 0.5;
-
                 wave.opacity = 0.5 * (1 - wave.radius / wave.maxRadius);
 
                 ctx.beginPath();
-                ctx.arc(centerX, centerY, wave.radius, 0, Math.PI * 2);
+                ctx.arc(wave.centerX, wave.centerY, wave.radius, 0, Math.PI * 2);
                 ctx.strokeStyle = `rgba(70, 210, 65, ${Math.max(0, wave.opacity)})`;
                 ctx.lineWidth = 6;
                 ctx.stroke();
 
                 ctx.beginPath();
-                ctx.arc(centerX, centerY, wave.radius - 4, 0, Math.PI * 2);
+                ctx.arc(wave.centerX, wave.centerY, wave.radius - 4, 0, Math.PI * 2);
                 ctx.strokeStyle = `rgba(90, 230, 85, ${Math.max(0, wave.opacity - 0.08)})`;
                 ctx.lineWidth = 4;
                 ctx.stroke();
 
                 if (wave.radius > 25) {
                     ctx.beginPath();
-                    ctx.arc(centerX, centerY, wave.radius - 8, 0, Math.PI * 2);
+                    ctx.arc(wave.centerX, wave.centerY, wave.radius - 8, 0, Math.PI * 2);
                     ctx.strokeStyle = `rgba(60, 190, 55, ${Math.max(0, wave.opacity - 0.12)})`;
                     ctx.lineWidth = 2;
                     ctx.stroke();
@@ -168,8 +179,7 @@ export function Login() {
                 path: '/'
             });
 
-            setUserData(userInfo);
-            clearFields();
+            navigate('/plantinfo');
 
         } catch (error) {
             const errorInfo=getErrorMessage(error)
@@ -193,7 +203,6 @@ export function Login() {
                 />
             <div className={styles["login-content"]}>
             <img className={styles.logo} src={logo} alt="Logo"></img>
-
             <div className={styles["form-container"]}>
                 {!userData && (
                 <>
@@ -209,6 +218,7 @@ export function Login() {
                     <button className={styles.button2} type="submit" onClick={() => {handleLogin();}} disabled={isLoading}> {isLoading ? "Connecting in..." : "Connect" }
                         </button>
                     <p className={styles.color}>Don't have an account yet? <Link className={styles.link} to="/Register">Sign up</Link></p>
+                    <p><Link className={styles.link} to="/PlantInfo">Back up for now</Link></p>
                 </>
                     )}
 
