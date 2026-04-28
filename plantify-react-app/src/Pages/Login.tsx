@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from 'react';
 import { Link } from "react-router-dom"
 import logo from '../assets/plantifylogotransp.png'
-import "./Stylesheets/Login.css";
+import styles from "./Stylesheets/Login.module.css";
 import Cookies from 'js-cookie';
 import {getErrorMessage, login} from "../api/authApi";
 
@@ -9,7 +9,7 @@ export function Login() {
     console.log("Initial render - checking cookies:", {
         token: Cookies.get('token'),
         user: Cookies.get('user')
-    });console.log("sadasddssadasdsassda");
+    });
     const [emailOrUsername, setEmailOrUsername] = useState("");
     const [password, setPassword] = useState("");
     const [userData, setUserData] = useState<{username: string; email: string} | null>(null);
@@ -20,6 +20,7 @@ export function Login() {
     const clearFields = () => {
         setEmailOrUsername("");
         setPassword("");
+        setUserData(null);
     }
 
     useEffect(() => {
@@ -75,7 +76,7 @@ export function Login() {
         addWave();
 
         let frameCounter = 0;
-        const framesBetweenWaves = 140;
+        const framesBetweenWaves = 280;
 
         let animationId: number;
 
@@ -86,6 +87,7 @@ export function Login() {
 
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
+
             for (let i = 0; i < waves.length; i++) {
                 const wave = waves[i];
 
@@ -113,17 +115,15 @@ export function Login() {
                     ctx.stroke();
                 }
             }
+
             waves = waves.filter(wave =>
                 wave.radius < wave.maxRadius && wave.opacity > 0.03
             );
+
             frameCounter++;
             if (frameCounter >= framesBetweenWaves) {
                 frameCounter = 0;
-                if (waves.length < 4) {
-                    addWave();
-                } else if (Math.random() < 0.15) {
-                    addWave();
-                }
+                addWave();
             }
 
             animationId = requestAnimationFrame(animate);
@@ -135,7 +135,7 @@ export function Login() {
             resize();
             waves = [];
             addWave();
-            frameCounter = 30;
+            frameCounter = 0;
         };
         window.addEventListener('resize', handleResizeAndReset);
 
@@ -147,22 +147,18 @@ export function Login() {
 
     }, []);
     const handleLogin = async () => {
-        setError(null);
-        setIsLoading(true);
+    setError(null);
+    setIsLoading(true);
         try {
-            const isEmail = emailOrUsername.includes("@")
+            const isEmail=emailOrUsername.includes("@")
             const response = await login({
-                email: isEmail ? emailOrUsername : undefined,
-                username: !isEmail ? emailOrUsername : undefined,
-                password
-            });
-            console.log("response.data", response.data);
-
-            Cookies.remove('user', { path: '/' });
+                email: isEmail ? emailOrUsername : "",
+            username : !isEmail ? emailOrUsername: "",
+            password});
 
             const userInfo = {
-                username: response.data.username,
-                email: response.data.email
+                username: response.data.username || emailOrUsername,
+                email: response.data.email || emailOrUsername
             };
 
             Cookies.set('user', JSON.stringify(userInfo), {
@@ -176,8 +172,7 @@ export function Login() {
             clearFields();
 
         } catch (error) {
-            console.log("login error:", error)
-            const errorInfo = getErrorMessage(error)
+            const errorInfo=getErrorMessage(error)
             setError(errorInfo.message)
         } finally {
             setIsLoading(false);
@@ -192,45 +187,41 @@ export function Login() {
     }
 
     return (
-        <div className="login-container" >
+        <div className={styles["login-container"]} >
             <canvas
-                ref={canvasRef}
+                ref={canvasRef} className={styles["login-canvas"]}
                 />
-            <img className="logo" src={logo} alt="Logo"></img>
+            <div className={styles["login-content"]}>
+            <img className={styles.logo} src={logo} alt="Logo"></img>
 
-            <div>
+            <div className={styles["form-container"]}>
                 {!userData && (
                 <>
 
-                    <input className="button" type="text" placeholder="Email or Username" value={emailOrUsername} onChange={(e) => setEmailOrUsername(e.target.value) } />
-                    <br/>
-                    <br/>
-                    <input className="button" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                    <br/>
+                    <input className={styles.button} type="text" placeholder="Email or Username" value={emailOrUsername} onChange={(e) => setEmailOrUsername(e.target.value) } />
+                    <input className={styles.button} type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
                     {error && (
-                        <div className="error-text">
+                        <div className={styles["error-text"]}>
                             {error}
                         </div>
                     )}
-                    <br/>
-                    <Link className="link" to="/Register">Forgot password?</Link>
-                    <br/>
-                    <button className="button2" type="submit" onClick={() => {handleLogin();}} disabled={isLoading}> {isLoading ? "Logging in..." : "Login" }
+                    <Link className={styles.link} to="/Register">Forgot password?</Link>
+                    <button className={styles.button2} type="submit" onClick={() => {handleLogin();}} disabled={isLoading}> {isLoading ? "Connecting in..." : "Connect" }
                         </button>
-                    <br/>
-                    <p>Don't have an account yet? <Link className="link" to="/Register">Sign up</Link></p>
+                    <p className={styles.color}>Don't have an account yet? <Link className={styles.link} to="/Register">Sign up</Link></p>
                 </>
                     )}
 
                 {userData && (
-                    <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', marginTop: '100px' }}>
+                    <div className={styles["user-info-panel"]}>
                         <h3>Welcome, {userData.username}!</h3>
                         <p><strong>Username:</strong> {userData.username}</p>
                         <p><strong>Email:</strong> {userData.email}</p>
-                        <button className="button2" onClick={handleLogout}>Logout</button>
+                        <button className={styles.button2} onClick={handleLogout}>Logout</button>
                     </div>
                 )}
             </div>
+        </div>
         </div>
     );
 }
