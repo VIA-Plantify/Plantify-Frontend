@@ -193,7 +193,6 @@ export function Login() {
                 />
             <div className={styles["login-content"]}>
             <img className={styles.logo} src={logo} alt="Logo"></img>
-
             <div className={styles["form-container"]}>
                 {!userData && (
                 <>
@@ -209,6 +208,7 @@ export function Login() {
                     <button className={styles.button2} type="submit" onClick={() => {handleLogin();}} disabled={isLoading}> {isLoading ? "Connecting in..." : "Connect" }
                         </button>
                     <p className={styles.color}>Don't have an account yet? <Link className={styles.link} to="/Register">Sign up</Link></p>
+                    <p><Link className={styles.link} to="/PlantInfo">Back up for now</Link></p>
                 </>
                     )}
 

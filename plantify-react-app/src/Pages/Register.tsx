@@ -25,7 +25,7 @@ export function Register()
 const  validatePassword=(pwd: string) => {
         return{
             length: pwd.length >= 8 && pwd.length <= 64,
-            numberSpecial: /[0-9]/.test(pwd) && /[!@#$%^&*()*+\-]/.test(pwd),
+            numberSpecial: /[0-9]/.test(pwd) && /[!@#$%^&*()*+.\-]/.test(pwd),
             upperLower:/[A-Z]/.test(pwd) && /[a-z]/.test(pwd)
         };
 };
