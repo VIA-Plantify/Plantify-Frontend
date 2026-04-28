@@ -1,5 +1,5 @@
 import {useEffect, useRef, useState} from 'react';
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import logo from '../assets/plantifylogotransp.png'
 
 import {getErrorMessage, register} from "../api/authApi";
@@ -7,6 +7,7 @@ import styles from "./Stylesheets/Register.module.css";
 
 export function Register()
 {
+    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -15,13 +16,6 @@ export function Register()
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const clearFields = () => {
-        setEmail("");
-        setUsername("");
-        setPassword("");
-        setName("");
-        setError(null);
-    }
 const  validatePassword=(pwd: string) => {
         return{
             length: pwd.length >= 8 && pwd.length <= 64,
@@ -49,30 +43,44 @@ const  validatePassword=(pwd: string) => {
             radius: number;
             opacity: number;
             maxRadius: number;
+            centerX: number;
+            centerY: number;
         }
 
         let waves: Wave[] = [];
+        const getLogoPosition = (): { x: number; y: number } => {
+            const logoElement = document.querySelector(`.${styles.logo}`);
+            if (logoElement && canvas) {
+                const logoRect = logoElement.getBoundingClientRect();
+                const canvasRect = canvas.getBoundingClientRect();
+                return {
+                    x: logoRect.left + logoRect.width / 2 - canvasRect.left,
+                    y: logoRect.top + logoRect.height * 0.7 - canvasRect.top
+                };
+            }
+            return { x: canvas.width / 2, y: canvas.height / 2 };
+        };
 
-        const getMaxRadius = () => {
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
+        const getMaxRadius = (centerX: number, centerY: number) => {
             const cornerX = Math.max(centerX, canvas.width - centerX);
             const cornerY = Math.max(centerY, canvas.height - centerY);
             return Math.sqrt(cornerX * cornerX + cornerY * cornerY);
         };
 
         const addWave = () => {
+            const logoPos = getLogoPosition();
             waves.push({
                 radius: 8,
                 opacity: 0.55,
-                maxRadius: getMaxRadius() + 60
+                maxRadius: getMaxRadius(logoPos.x, logoPos.y) + 60,
+                centerX: logoPos.x,
+                centerY: logoPos.y
             });
         };
 
-        addWave();
 
         let frameCounter = 0;
-        const framesBetweenWaves = 140;
+        const framesBetweenWaves = 280;
 
         let animationId: number;
 
@@ -81,46 +89,41 @@ const  validatePassword=(pwd: string) => {
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
             for (let i = 0; i < waves.length; i++) {
                 const wave = waves[i];
 
                 wave.radius += 0.5;
-
                 wave.opacity = 0.5 * (1 - wave.radius / wave.maxRadius);
 
                 ctx.beginPath();
-                ctx.arc(centerX, centerY, wave.radius, 0, Math.PI * 2);
+                ctx.arc(wave.centerX, wave.centerY, wave.radius, 0, Math.PI * 2);
                 ctx.strokeStyle = `rgba(70, 210, 65, ${Math.max(0, wave.opacity)})`;
                 ctx.lineWidth = 6;
                 ctx.stroke();
 
                 ctx.beginPath();
-                ctx.arc(centerX, centerY, wave.radius - 4, 0, Math.PI * 2);
+                ctx.arc(wave.centerX, wave.centerY, wave.radius - 4, 0, Math.PI * 2);
                 ctx.strokeStyle = `rgba(90, 230, 85, ${Math.max(0, wave.opacity - 0.08)})`;
                 ctx.lineWidth = 4;
                 ctx.stroke();
 
                 if (wave.radius > 25) {
                     ctx.beginPath();
-                    ctx.arc(centerX, centerY, wave.radius - 8, 0, Math.PI * 2);
+                    ctx.arc(wave.centerX, wave.centerY, wave.radius - 8, 0, Math.PI * 2);
                     ctx.strokeStyle = `rgba(60, 190, 55, ${Math.max(0, wave.opacity - 0.12)})`;
                     ctx.lineWidth = 2;
                     ctx.stroke();
                 }
             }
+
             waves = waves.filter(wave =>
                 wave.radius < wave.maxRadius && wave.opacity > 0.03
             );
+
             frameCounter++;
             if (frameCounter >= framesBetweenWaves) {
                 frameCounter = 0;
-                if (waves.length < 4) {
-                    addWave();
-                } else if (Math.random() < 0.15) {
-                    addWave();
-                }
+                addWave();
             }
 
             animationId = requestAnimationFrame(animate);
@@ -132,7 +135,7 @@ const  validatePassword=(pwd: string) => {
             resize();
             waves = [];
             addWave();
-            frameCounter = 30;
+            frameCounter = 0;
         };
         window.addEventListener('resize', handleResizeAndReset);
 
@@ -155,8 +158,8 @@ const  validatePassword=(pwd: string) => {
 
             });
 
-            alert("Registered successfully!");
-            clearFields();
+            navigate('/plantinfo');
+
         }catch(error) {
             const errorInfo=getErrorMessage(error);
             setError(errorInfo.message);
@@ -204,7 +207,7 @@ const  validatePassword=(pwd: string) => {
                             {error}
                         </div>
                     )}
-                <button className={styles.button2} type="submit" onClick={() => {handleRegister(); clearFields();}}
+                <button className={styles.button2} type="submit" onClick={() => {handleRegister();}}
                         disabled={isLoading}>{isLoading ? "Creating account..." : "Create account"}</button>
                 <p className={styles.color}>Have an account already? <Link className="link" to="/">Log in</Link></p>
 
