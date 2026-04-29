@@ -1,12 +1,15 @@
 export interface Plant {
     mac: string;
     name: string;
+    username: string;
     optimalTemperature: number;
     optimalAirHumidity: number;
     optimalSoilHumidity: number;
     optimalLightIntensity: number;
     optimalLightPeriod: string;   // TimeSpan → "hh:mm:ss"
-    temperatureScale: number;     // "C" or "F"
+    temperatureScale: number;
+    soilHumidity: SoilHumidity;
+    // "C" or "F"
 }
 
 export interface CreatePlantRequest {
@@ -30,4 +33,13 @@ export interface UpdatePlantRequest {
     optimalLightIntensity?: number;
     optimalLightPeriod?: string;  // "hh:mm:ss"
     temperatureScale?: string;    // "C" or "F"
+}
+
+export interface PlantsResponse {
+    numberOfReadings: number;
+}
+
+export interface SoilHumidity {
+    pastReadings: [];
+    value: number;
 }

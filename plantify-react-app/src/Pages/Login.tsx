@@ -228,6 +228,7 @@ export function Login() {
                         <p><strong>Username:</strong> {userData.username}</p>
                         <p><strong>Email:</strong> {userData.email}</p>
                         <button className={styles.button2} onClick={handleLogout}>Logout</button>
+                        <p><Link className={styles.link} to="/PlantInfo">Back up for now</Link></p>
                     </div>
                 )}
             </div>
