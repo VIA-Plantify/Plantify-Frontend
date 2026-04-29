@@ -1,18 +1,16 @@
 name: dev
 
 services:
-    frontenddev:
-      image: frontend:dev
-      build:
-        context: .
-        dockerfile: .devcontainer/Dockerfile
-      container_name: frontenddev
-      environment:
-        VITE_API_URL: http://host.docker.internal:8081
-      volumes:
-        - .:/workspace
-      working_dir: /workspace
-      command: sleep infinity
-      user: root
-      ports:
-        - "5173:5173"
+  frontenddev:
+    image: frontend:dev
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    container_name: frontenddev
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    command: sleep infinity
+    user: root
+    ports:
+      - "5173:5173"
