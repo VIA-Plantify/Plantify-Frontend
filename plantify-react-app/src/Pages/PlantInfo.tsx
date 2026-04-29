@@ -1,9 +1,8 @@
 ﻿import { useEffect, useState } from "react";
 import styles from "./Stylesheets/PlantInfo.module.css";
-import plantImage from '../assets/newplant.placeholder.png';
 import Cookies from "js-cookie";
 import { Link } from "react-router-dom";
-import { getPlants, createPlant } from "../api/Plants/plantApi.ts";
+import {getPlants, createPlant, getPlant} from "../api/Plants/plantApi.ts";
 import { getErrorMessage } from "../api/authApi";
 import type { Plant } from "../api/Plants/plantTypes.ts";
 
@@ -15,9 +14,9 @@ export function PlantInfo() {
     useEffect(() => {
         const fetchPlant = async () => {
             try {
-                const plants = await getPlants();
+                const plants = await getPlant("84:f3:eb:95:b4:b3", 10);
                 console.log("plants:", plants);
-                setPlant(plants[0] ?? null);
+                setPlant(plants ?? null);
             } catch (err) {
                 const { message } = getErrorMessage(err);
                 setError(message);
@@ -26,8 +25,22 @@ export function PlantInfo() {
             }
         };
 
+
         fetchPlant();
     }, []);
+
+    const fetchPlantOnReload = async () => {
+        try {
+            const plants = await getPlant("84:f3:eb:95:b4:b3", 10);
+            console.log("plants:", plants);
+            setPlant(plants ?? null);
+        } catch (err) {
+            const { message } = getErrorMessage(err);
+            setError(message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const handleCreate = async () => {
         try {
@@ -58,9 +71,9 @@ export function PlantInfo() {
     const scaleLabel = plant?.temperatureScale === 0 ? "°C" : "°F";
 
     return (
+
         <div className={styles["plant-info-container"]}>
             <div className={styles["plant-info-content"]}>
-
                 <div className={styles["left-boxes"]}>
                     <div className={styles.box}>
                         <span className={styles["box-label"]}>Name</span>
@@ -74,15 +87,22 @@ export function PlantInfo() {
                             {isLoading ? "..." : (plant?.mac ?? "—")}
                         </span>
                     </div>
+                    <div className={styles.box}>
+
+                        <span className={styles["box-label"]}>Username: </span>
+                        <span className={styles["box-value"]}>
+                            {isLoading ? "..." : (plant?.username ?? "—")}
+                        </span>
+                    </div>
+                    <div className={styles.box}>
+
+                        <span className={styles["box-label"]}>Soil humidity value:{plant?.soilHumidity.value ?? "—"} </span>
+
+                    </div>
+
+
                 </div>
 
-                <div className={styles["center-image"]}>
-                    <img
-                        className={styles["plant-image"]}
-                        src={plantImage}
-                        alt="Plant"
-                    />
-                </div>
 
                 <div className={styles["right-boxes"]}>
                     <div className={styles.box}>
@@ -96,7 +116,7 @@ export function PlantInfo() {
                         </span>
                     </div>
                     <div className={styles.box}>
-                        <span className={styles["box-label"]}>Humidity</span>
+                        <span className={styles["box-label"]}>Air Humidity: </span>
                         <span className={styles["box-value"]}>
                             {isLoading ? "..." : (
                                 plant?.optimalAirHumidity != null
@@ -105,11 +125,65 @@ export function PlantInfo() {
                             )}
                         </span>
                     </div>
+                    <div className={styles.box}>
+                        <span className={styles["box-label"]}> Soil Humidity </span>
+                        <span className={styles["box-value"]}>
+                            {isLoading ? "..." : (
+                                plant?.optimalSoilHumidity != null
+                                    ? `${plant.optimalSoilHumidity}%`
+                                    : "—"
+                            )}
+                        </span>
+                    </div>
+                    <div className={styles.box}>
+                        <span className={styles["box-label"]}> Light Intensity </span>
+                        <span className={styles["box-value"]}>
+                            {isLoading ? "..." : (
+                                plant?.optimalLightIntensity != null
+                                    ? `${plant.optimalLightIntensity}%`
+                                    : "—"
+                            )}
+                        </span>
+                    </div>
+
                 </div>
 
                 {error && <p className={styles["error-text"]}>{error}</p>}
 
                 <button onClick={handleCreate}>Create Test Plant</button>
+                <button onClick={fetchPlantOnReload}>Reload Plant info</button>
+                <div
+                    style={{
+                        display: "flex",
+                        flexWrap: "wrap",
+                        gap: "8px",
+                        marginTop: "10px"
+                    }}
+                >
+                    {isLoading ? (
+                        "..."
+                    ) : plant?.soilHumidity.pastReadings?.length ? (
+                        plant.soilHumidity.pastReadings
+                            .slice(0, 10)
+                            .map((reading, index) => (
+                                <span
+                                    key={index}
+                                    style={{
+                                        flex: "0 0 calc(33.33% - 8px)",
+                                        boxSizing: "border-box",
+                                        padding: "4px",
+                                        border: "1px solid #ccc",
+                                        borderRadius: "4px",
+                                        textAlign: "center"
+                                    }}
+                                >
+                    {reading}%
+                </span>
+                            ))
+                    ) : (
+                        "—"
+                    )}
+                </div>
 
                 <p><Link className={styles.link} to="/">Back up for now</Link></p>
             </div>

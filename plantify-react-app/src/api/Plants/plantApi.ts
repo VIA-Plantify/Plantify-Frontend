@@ -1,13 +1,19 @@
 import api from "../axiosInstance";
-import type { Plant, CreatePlantRequest } from "./plantTypes.ts";
+import type {Plant, CreatePlantRequest} from "./plantTypes.ts";
 
 export const getPlants = async (): Promise<Plant[]> => {
-    const response = await api.get<Plant[]>("/Plant");
+    const response = await api.get<Plant[]>("/Plant", {
+
+    });
     return response.data;
 };
 
-export const getPlant = async (mac: string): Promise<Plant> => {
-    const response = await api.get<Plant>(`/Plant/p/${mac}`);
+export const getPlant = async (mac: string , data : number): Promise<Plant> => {
+    const response = await api.get<Plant>(`/Plant/p/${mac}`,{
+        params: {
+            numberOfReadings: data
+        }
+    });
     return response.data;
 };
 
