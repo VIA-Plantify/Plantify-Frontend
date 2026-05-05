@@ -84,7 +84,7 @@ export function PlantInfo() {
         const chartHeight = height - 2 * padding;
 
         const maxValue = 100;
-        const minValue = 0;
+       // const minValue = 0;
 
         const xStep = chartWidth / (chartData.length - 1);
         const points = chartData.map((value, index) => {
