@@ -7,6 +7,7 @@ import { getPlants, createPlant } from "../api/Plants/plantApi.ts";
 import { getErrorMessage } from "../api/authApi";
 import type { Plant } from "../api/Plants/plantTypes.ts";
 
+
 export function PlantInfo() {
     const [plant, setPlant] = useState<Plant | null>(null);
     const [error, setError] = useState<string | null>(null);
