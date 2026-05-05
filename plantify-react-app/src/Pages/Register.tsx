@@ -2,8 +2,9 @@ import {useEffect, useRef, useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
 import logo from '../assets/plantifylogotransp.png'
 
-import {getErrorMessage, register} from "../api/authApi";
 import styles from "./Stylesheets/Register.module.css";
+import { getErrorMessage, register, login } from "../api/authApi";
+import Cookies from 'js-cookie';
 
 export function Register()
 {
@@ -145,25 +146,37 @@ const  validatePassword=(pwd: string) => {
             cancelAnimationFrame(animationId);
         };
     }, []);
+
     const handleRegister = async () => {
         setError(null);
         setIsLoading(true);
         try {
-            await register({
+            await register({ email, password, username, name });
 
-                email,
-                password,
-                username,
-                name
+            const response = await login({
+                email: email,
+                username: "",
+                password: password
+            });
 
+            const userInfo = {
+                username: response.data.username || username,
+                email: response.data.email || email
+            };
+
+            Cookies.set('user', JSON.stringify(userInfo), {
+                expires: 1,
+                secure: false,
+                sameSite: 'Lax',
+                path: '/'
             });
 
             navigate('/plantinfo');
 
-        }catch(error) {
-            const errorInfo=getErrorMessage(error);
+        } catch (error) {
+            const errorInfo = getErrorMessage(error);
             setError(errorInfo.message);
-        }finally {
+        } finally {
             setIsLoading(false);
         }
     };
