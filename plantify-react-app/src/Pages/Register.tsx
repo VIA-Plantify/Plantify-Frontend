@@ -189,8 +189,8 @@ const  validatePassword=(pwd: string) => {
             <div className={styles["register-content"]}>
             <img className={styles.logo} src={logo} alt="Logo"></img>
             <div className={styles["form-container"]}>
-                <input className={styles.button} type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)}/>
-                <input className={styles.button} type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
+                <input className={styles.button} type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') handleRegister(); }}/>
+                <input className={styles.button} type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') handleRegister(); }} />
                 <input
                     className={styles.button}
                     type="password"
@@ -199,6 +199,7 @@ const  validatePassword=(pwd: string) => {
                     onChange={(e) => setPassword(e.target.value)}
                     onFocus={() => setIsPasswordFocused(true)}
                     onBlur={() => setIsPasswordFocused(false)}
+                    onKeyDown={(e) => { if (e.key === 'Enter') handleRegister(); }}
                 />
                 {isPasswordFocused && (
                     <div className={styles["password-validation"]}>
@@ -213,7 +214,14 @@ const  validatePassword=(pwd: string) => {
                         </p>
                     </div>
                 )}
-                <input className={styles.button} type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
+                <input
+                    className={styles.button}
+                    type="text"
+                    placeholder="Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter') handleRegister(); }}
+                />
                 {
                     error && (
                         <div className={styles["error-text"]}>
