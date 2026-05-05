@@ -207,8 +207,23 @@ export function Login() {
                 {!userData && (
                 <>
 
-                    <input className={styles.button} type="text" placeholder="Email or Username" value={emailOrUsername} onChange={(e) => setEmailOrUsername(e.target.value) } />
-                    <input className={styles.button} type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                    <input
+                        className={styles.button}
+                        type="text"
+                        placeholder="Email or Username"
+                        value={emailOrUsername}
+                        onChange={(e) => setEmailOrUsername(e.target.value) }
+                        onKeyDown={(e) => { if (e.key === 'Enter') handleLogin(); }}
+                    />
+
+                    <input
+                        className={styles.button}
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === 'Enter') handleLogin(); }}
+                    />
                     {error && (
                         <div className={styles["error-text"]}>
                             {error}
