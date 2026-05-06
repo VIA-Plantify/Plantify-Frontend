@@ -159,7 +159,7 @@ export function AddPlant() {
                 optimalLightIntensity: form.optimalLightIntensity ? parseFloat(form.optimalLightIntensity) : undefined,
                 optimalLightPeriod: form.optimalLightPeriod ? parseInt(form.optimalLightPeriod) : undefined,
             });
-            navigate("/plant");
+            navigate("/PlantInfo");
         } catch (err) {
             const { message } = getErrorMessage(err);
             setError(message);
@@ -170,7 +170,7 @@ export function AddPlant() {
 
     const handleLogout = () => {
         Cookies.remove("user");
-        navigate("/login");
+        navigate("/");
     };
 
     const fields: {
@@ -214,10 +214,9 @@ export function AddPlant() {
     return (
         <div className={styles["plant-info-container"]} onClick={() => dropdownOpen && setDropdownOpen(false)}>
 
-            {/* Top Bar */}
             <div className={styles["top-bar"]}>
                 <div className={styles["left-buttons"]}>
-                    <button className={styles["back-btn"]} onClick={() => navigate("/plant")}>
+                    <button className={styles["back-btn"]} onClick={() => navigate("/PlantInfo")}>
                         ← Back
                     </button>
                 </div>

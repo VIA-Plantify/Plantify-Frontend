@@ -51,18 +51,18 @@ export function PlantInfo() {
     };
 
     const handleAddPlant = () => {
-        console.log("Add Plant clicked – no logic attached");
+        navigate("/AddPlant");
     };
 
     const handleLogout = () => {
         Cookies.remove("user");
-        navigate("/login");
+        navigate("/");
     };
 
     const scaleLabel = plant?.temperatureScale === 0 ? "°C" : "°F";
 
     const metrics = [
-        { label: "Light", value: plant?.optimalLightIntensity ?? null, unit: "%", key: "light" },
+        { label: "Light Intensity", value: plant?.optimalLightIntensity ?? null, unit: "%", key: "light" },
         { label: "Soil Humidity", value: plant?.optimalSoilHumidity ?? null, unit: "%", key: "soil" },
         { label: "Air Humidity", value: plant?.optimalAirHumidity ?? null, unit: "%", key: "air" },
         { label: "Temperature", value: plant?.optimalTemperature ?? null, unit: scaleLabel, key: "temp" }
@@ -74,21 +74,82 @@ export function PlantInfo() {
     const readings = plant?.soilHumidity?.pastReadings || [];
     const chartData = readings.slice(0, 20);
 
-
     const renderLineChart = () => {
-        if (chartData.length === 0) {
-            return <p className={styles["no-data"]}>No soil humidity data available</p>;
-        }
-
         const width = 800;
         const height = 300;
         const padding = 40;
         const chartWidth = width - 2 * padding;
         const chartHeight = height - 2 * padding;
 
-        const maxValue = 100;
-        // const minValue = 0;
+        const hasNoData = chartData.length === 0;
 
+        if (hasNoData) {
+            return (
+                <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="xMidYMid meet">
+
+                    {[0, 25, 50, 75, 100].map((level) => {
+                        const y = padding + chartHeight - (level / 100) * chartHeight;
+                        return (
+                            <g key={level}>
+                                <line
+                                    x1={padding}
+                                    y1={y}
+                                    x2={width - padding}
+                                    y2={y}
+                                    stroke="#ddd"
+                                    strokeWidth="1"
+                                    strokeDasharray="4"
+                                />
+                                <text
+                                    x={padding - 8}
+                                    y={y + 4}
+                                    fontSize="11"
+                                    fill="#888"
+                                    textAnchor="end"
+                                >
+                                    {level}%
+                                </text>
+                            </g>
+                        );
+                    })}
+
+                    <text
+                        x={width / 2}
+                        y={height / 2}
+                        fontSize="16"
+                        fill="#999"
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                    >
+                        No soil humidity data available
+                    </text>
+
+                    <text
+                        x={width / 2}
+                        y={height - 8}
+                        fontSize="12"
+                        fill="#11ae5e"
+                        textAnchor="middle"
+                        fontWeight="bold"
+                    >
+                        Reading Number
+                    </text>
+                    <text
+                        x={1}
+                        y={height / 2}
+                        fontSize="12"
+                        fill="#11ae5e"
+                        textAnchor="middle"
+                        fontWeight="bold"
+                        transform={`rotate(-90, 1, ${height / 2})`}
+                    >
+                        Humidity (%)
+                    </text>
+                </svg>
+            );
+        }
+
+        const maxValue = 100;
         const xStep = chartWidth / (chartData.length - 1);
         const points = chartData.map((value, index) => {
             const x = padding + index * xStep;
@@ -98,8 +159,6 @@ export function PlantInfo() {
 
         return (
             <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="xMidYMid meet">
-
-                <rect width={width} height={height} fill="#f9f9f9" rx="10" />
 
                 {[0, 25, 50, 75, 100].map((level) => {
                     const y = padding + chartHeight - (level / maxValue) * chartHeight;
@@ -127,7 +186,6 @@ export function PlantInfo() {
                     );
                 })}
 
-
                 <polyline
                     points={points}
                     fill="none"
@@ -136,7 +194,6 @@ export function PlantInfo() {
                     strokeLinejoin="round"
                     strokeLinecap="round"
                 />
-
 
                 {chartData.map((value, index) => {
                     const x = padding + index * xStep;
@@ -153,7 +210,6 @@ export function PlantInfo() {
                         />
                     );
                 })}
-
 
                 {chartData.map((_, index) => {
                     const x = padding + index * xStep;
@@ -174,7 +230,6 @@ export function PlantInfo() {
                     return null;
                 })}
 
-
                 <text
                     x={width / 2}
                     y={height - 8}
@@ -186,13 +241,13 @@ export function PlantInfo() {
                     Reading Number
                 </text>
                 <text
-                    x={15}
+                    x={1}
                     y={height / 2}
                     fontSize="12"
                     fill="#11ae5e"
                     textAnchor="middle"
                     fontWeight="bold"
-                    transform={`rotate(-90, 15, ${height / 2})`}
+                    transform={`rotate(-90, 1, ${height / 2})`}
                 >
                     Humidity (%)
                 </text>
@@ -231,7 +286,6 @@ export function PlantInfo() {
                     </button>
                 </div>
             </div>
-
 
             <div className={styles["plant-info-content"]}>
                 <div className={styles["left-boxes"]}>
@@ -273,14 +327,9 @@ export function PlantInfo() {
                 </div>
             </div>
 
-
             <div className={styles["chart-section"]}>
                 <h3 className={styles["chart-title"]}>Soil Humidity History</h3>
-                {isLoading ? (
-                    <p>Loading chart...</p>
-                ) : (
-                    renderLineChart()
-                )}
+                {renderLineChart()}
             </div>
             {error && <p className={styles["error-text"]}>{error}</p>}
         </div>
