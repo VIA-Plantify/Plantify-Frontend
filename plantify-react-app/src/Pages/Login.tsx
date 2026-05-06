@@ -4,6 +4,8 @@ import logo from '../assets/plantifylogotransp.png'
 import styles from "./Stylesheets/Login.module.css";
 import Cookies from 'js-cookie';
 import {getErrorMessage, login} from "../api/authApi";
+import userIcon from "../assets/icons/user.png";
+import passwordIcon from "../assets/icons/password.png";
 
 export function Login() {
     const navigate = useNavigate();
@@ -207,17 +209,28 @@ export function Login() {
             <div className={styles["form-container"]}>
                 {!userData && (
                 <>
+                    <div className={styles["wrapper"]}>
+                        <img
+                            src={userIcon}
+                            alt="user icon"
+                            className={styles["icon"]}
+                        />
+                        <input
+                            className={styles.button}
+                            type="text"
+                            placeholder="Email or Username"
+                            value={emailOrUsername}
+                            onChange={(e) => setEmailOrUsername(e.target.value) }
+                            onKeyDown={(e) => { if (e.key === 'Enter') handleLogin(); }}
+                        />
+                    </div>
 
-                    <input
-                        className={styles.button}
-                        type="text"
-                        placeholder="Email or Username"
-                        value={emailOrUsername}
-                        onChange={(e) => setEmailOrUsername(e.target.value) }
-                        onKeyDown={(e) => { if (e.key === 'Enter') handleLogin(); }}
-                    />
-
-                    <div className={styles["password-wrapper"]}>
+                    <div className={styles["wrapper"]}>
+                        <img
+                            src={passwordIcon}
+                            alt="password icon"
+                            className={styles["icon"]}
+                        />
                         <input
                             className={styles.button}
                             type={showPassword ? "text" : "password"}
