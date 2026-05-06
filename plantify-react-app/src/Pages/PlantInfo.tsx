@@ -7,6 +7,7 @@ import { getErrorMessage } from "../api/authApi";
 import type { Plant } from "../api/Plants/plantTypes.ts";
 import plantImg from "../assets/plant.placeholder.png";
 
+
 export function PlantInfo() {
     const navigate = useNavigate();
     const [plant, setPlant] = useState<Plant | null>(null);
@@ -45,10 +46,6 @@ export function PlantInfo() {
         } catch (err) {
             console.error("Failed to fetch plants list", err);
         }
-    };
-
-    const handleAddPlant = () => {
-        console.log("Add Plant clicked – no logic attached");
     };
 
     const handleLogout = () => {
@@ -202,7 +199,7 @@ export function PlantInfo() {
 
             <div className={styles["top-bar"]}>
                 <div className={styles["left-buttons"]}>
-                    <button className={styles["add-btn"]} onClick={handleAddPlant}>
+                    <button className={styles["add-btn"]} onClick={() => navigate("/AddPlant")}>
                         + Add Plant
                     </button>
                     <select
