@@ -24,8 +24,6 @@ export const createPlant = async (data: CreatePlantRequest): Promise<Plant> => {
         Username: data.username,
         OptimalTemperature: data.optimalTemperature,
         OptimalAirHumidity: data.optimalAirHumidity,
-        OptimalWaterLevel: data.optimalWaterLevel,
-        OptimalWaterIntake: data.optimalWaterIntake,
         OptimalSoilHumidity: data.optimalSoilHumidity,
         OptimalLightIntensity: data.optimalLightIntensity,
         OptimalLightPeriod: data.optimalLightPeriod,
