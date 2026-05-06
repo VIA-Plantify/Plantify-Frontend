@@ -15,6 +15,7 @@ function App() {
                     <Route path="/" element={<Login />} />
                     <Route path="/Register" element={<Register />}/>
                     <Route path="/PlantInfo" element={<PlantInfo/>}/>
+                    <Route path="/AddPlant" element={<AddPlant/>}/>
                 </Routes>
             </BrowserRouter>
         </ThemeProvider>
