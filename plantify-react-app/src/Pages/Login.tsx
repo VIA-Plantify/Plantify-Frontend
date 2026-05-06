@@ -17,6 +17,7 @@ export function Login() {
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const [showPassword, setShowPassword] = useState(false);
 
     const clearFields = () => {
         setEmailOrUsername("");
@@ -216,14 +217,23 @@ export function Login() {
                         onKeyDown={(e) => { if (e.key === 'Enter') handleLogin(); }}
                     />
 
-                    <input
-                        className={styles.button}
-                        type="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        onKeyDown={(e) => { if (e.key === 'Enter') handleLogin(); }}
-                    />
+                    <div className={styles["password-wrapper"]}>
+                        <input
+                            className={styles.button}
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            onKeyDown={(e) => { if (e.key === 'Enter') handleLogin(); }}
+                        />
+                        <button
+                            type="button"
+                            className={styles["password-toggle"]}
+                            onClick={() => setShowPassword(prev => !prev)}
+                        >
+                            {showPassword ? "Hide Password" : "Show Password"}
+                        </button>
+                    </div>
                     {error && (
                         <div className={styles["error-text"]}>
                             {error}

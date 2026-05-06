@@ -171,6 +171,28 @@ a, a:visited, a:hover, a:active, a:focus {
     color: #ff4444;
 }
 
+.password-wrapper {
+    position: relative;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    color: #11ae5e;
+    font-weight: bold;
+}
+
+.password-toggle {
+    position: absolute;
+    right: -175px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 0;
+    line-height: 1;
+    color: #11ae5e;
+    font-weight: bold;
+}
+
 @media (max-width: 600px) {
     .button, .button2, .error-text, .password-validation {
         width: 90%;
