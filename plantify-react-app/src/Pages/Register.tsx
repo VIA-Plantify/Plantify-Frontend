@@ -5,6 +5,10 @@ import logo from '../assets/plantifylogotransp.png'
 import styles from "./Stylesheets/Register.module.css";
 import { getErrorMessage, register, login } from "../api/authApi";
 import Cookies from 'js-cookie';
+import emailIcon from '../assets/icons/email.png';
+import nameIcon from '../assets/icons/name.png';
+import passwordIcon from '../assets/icons/password.png';
+import userIcon from '../assets/icons/user.png';
 
 export function Register()
 {
@@ -190,9 +194,38 @@ const  validatePassword=(pwd: string) => {
             <div className={styles["register-content"]}>
             <img className={styles.logo} src={logo} alt="Logo"></img>
             <div className={styles["form-container"]}>
-                <input className={styles.button} type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') handleRegister(); }}/>
-                <input className={styles.button} type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') handleRegister(); }} />
-                <div className={styles["password-wrapper"]}>
+                <div className={styles["wrapper"]}>
+                    <img
+                        src={emailIcon}
+                        alt="email icon"
+                        className={styles["icon"]}
+                    />
+                    <input
+                        className={styles.button}
+                        type="email" placeholder="Email"
+                        value={email} onChange={(e) => setEmail(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === 'Enter') handleRegister(); }}
+                    />
+                </div>
+                <div className={styles["wrapper"]}>
+                    <img
+                        src={userIcon}
+                        alt="user icon"
+                        className={styles["icon"]}
+                    />
+                    <input
+                        className={styles.button}
+                        type="text" placeholder="Username"
+                        value={username} onChange={(e) => setUsername(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === 'Enter') handleRegister(); }}
+                    />
+                </div>
+                <div className={styles["wrapper"]}>
+                    <img
+                        src={passwordIcon}
+                        alt="password icon"
+                        className={styles["icon"]}
+                    />
                     <input
                         className={styles.button}
                         type={showPassword ? "text" : "password"}
@@ -223,14 +256,23 @@ const  validatePassword=(pwd: string) => {
                         </p>
                     </div>
                 )}
-                <input
+
+                <div className={styles["wrapper"]}>
+                    <img
+                        src={nameIcon}
+                        alt="name icon"
+                        className={styles["icon"]}
+                    />
+                    <input
                     className={styles.button}
                     type="text"
                     placeholder="Name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     onKeyDown={(e) => { if (e.key === 'Enter') handleRegister(); }}
-                />
+                    />
+                </div>
+
                 {
                     error && (
                         <div className={styles["error-text"]}>

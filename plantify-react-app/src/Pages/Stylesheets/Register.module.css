@@ -171,7 +171,7 @@ a, a:visited, a:hover, a:active, a:focus {
     color: #ff4444;
 }
 
-.password-wrapper {
+.wrapper {
     position: relative;
     width: fit-content;
     display: flex;
@@ -191,6 +191,19 @@ a, a:visited, a:hover, a:active, a:focus {
     line-height: 1;
     color: #11ae5e;
     font-weight: bold;
+}
+
+.icon {
+    position: absolute;
+    left: 20px;
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
+    opacity: 0.75;
+}
+
+.button {
+    padding-left: 38px;
 }
 
 @media (max-width: 600px) {
