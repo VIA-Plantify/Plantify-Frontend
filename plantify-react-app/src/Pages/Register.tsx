@@ -17,6 +17,7 @@ export function Register()
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const [showPassword, setShowPassword] = useState(false);
 const  validatePassword=(pwd: string) => {
         return{
             length: pwd.length >= 8 && pwd.length <= 64,
@@ -191,16 +192,24 @@ const  validatePassword=(pwd: string) => {
             <div className={styles["form-container"]}>
                 <input className={styles.button} type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') handleRegister(); }}/>
                 <input className={styles.button} type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') handleRegister(); }} />
-                <input
-                    className={styles.button}
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    onFocus={() => setIsPasswordFocused(true)}
-                    onBlur={() => setIsPasswordFocused(false)}
-                    onKeyDown={(e) => { if (e.key === 'Enter') handleRegister(); }}
-                />
+                <div className={styles["password-wrapper"]}>
+                    <input
+                        className={styles.button}
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        onFocus={() => setIsPasswordFocused(true)}
+                        onBlur={() => setIsPasswordFocused(false)}
+                    />
+                    <button
+                        type="button"
+                        className={styles["password-toggle"]}
+                        onClick={() => setShowPassword(prev => !prev)}
+                    >
+                        {showPassword ? "Hide Password" : "Show Password"}
+                    </button>
+                </div>
                 {isPasswordFocused && (
                     <div className={styles["password-validation"]}>
                         <p className={passwordValidation.length ? styles.valid : styles.invalid}>
