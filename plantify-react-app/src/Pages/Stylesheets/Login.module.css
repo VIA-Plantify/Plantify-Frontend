@@ -5,10 +5,13 @@
 }
 
 body {
-    background-color: white;
     margin: 0;
     padding: 0;
     font-weight: bold;
+}
+
+.dark .body, .dark.body {
+    background-color: #1a1a1a;
 }
 
 .login-container {
@@ -18,7 +21,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: white;
 }
 
 .login-canvas {
@@ -142,6 +144,10 @@ a, a:visited, a:hover, a:active, a:focus {
     text-align: center;
 }
 
+.dark .color, .color.dark {
+    color: #ffffff;
+}
+
 .error-text {
     color: #ff0000;
     background-color: rgba(255, 0, 0, 0.1);
@@ -163,6 +169,10 @@ a, a:visited, a:hover, a:active, a:focus {
     width: 320px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
+}
+
+.dark .user-info-panel, .dark .user-info-panel {
+    background-color: #1a1a1a;
 }
 
 .user-details {
