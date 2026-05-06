@@ -9,9 +9,12 @@ import emailIcon from '../assets/icons/email.png';
 import nameIcon from '../assets/icons/name.png';
 import passwordIcon from '../assets/icons/password.png';
 import userIcon from '../assets/icons/user.png';
+import { useTheme } from '../theme/ThemeContext';
+import { ThemeToggle } from '../theme/ThemeToggle';
 
 export function Register()
 {
+    const { theme } = useTheme();
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
@@ -22,13 +25,13 @@ export function Register()
     const [isLoading, setIsLoading] = useState(false);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [showPassword, setShowPassword] = useState(false);
-const  validatePassword=(pwd: string) => {
+    const  validatePassword=(pwd: string) => {
         return{
             length: pwd.length >= 8 && pwd.length <= 64,
             numberSpecial: /[0-9]/.test(pwd) && /[!@#$%^&*()*+.\-]/.test(pwd),
             upperLower:/[A-Z]/.test(pwd) && /[a-z]/.test(pwd)
         };
-};
+    };
 
     const passwordValidation = validatePassword(password);
 
@@ -150,7 +153,7 @@ const  validatePassword=(pwd: string) => {
             window.removeEventListener('resize', handleResizeAndReset);
             cancelAnimationFrame(animationId);
         };
-    }, []);
+    }, [theme]);
 
     const handleRegister = async () => {
         setError(null);
@@ -187,104 +190,105 @@ const  validatePassword=(pwd: string) => {
     };
 
     return (
-        <div className={styles["register-container"]}>
+        <div className={`${styles["register-container"]} ${theme === 'dark' ? styles.dark : ''}`}>
             <canvas
                 ref={canvasRef} className={styles["register-canvas"]}
             />
             <div className={styles["register-content"]}>
-            <img className={styles.logo} src={logo} alt="Logo"></img>
-            <div className={styles["form-container"]}>
-                <div className={styles["wrapper"]}>
-                    <img
-                        src={emailIcon}
-                        alt="email icon"
-                        className={styles["icon"]}
-                    />
-                    <input
-                        className={styles.button}
-                        type="email" placeholder="Email"
-                        value={email} onChange={(e) => setEmail(e.target.value)}
-                        onKeyDown={(e) => { if (e.key === 'Enter') handleRegister(); }}
-                    />
-                </div>
-                <div className={styles["wrapper"]}>
-                    <img
-                        src={userIcon}
-                        alt="user icon"
-                        className={styles["icon"]}
-                    />
-                    <input
-                        className={styles.button}
-                        type="text" placeholder="Username"
-                        value={username} onChange={(e) => setUsername(e.target.value)}
-                        onKeyDown={(e) => { if (e.key === 'Enter') handleRegister(); }}
-                    />
-                </div>
-                <div className={styles["wrapper"]}>
-                    <img
-                        src={passwordIcon}
-                        alt="password icon"
-                        className={styles["icon"]}
-                    />
-                    <input
-                        className={styles.button}
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        onFocus={() => setIsPasswordFocused(true)}
-                        onBlur={() => setIsPasswordFocused(false)}
-                    />
-                    <button
-                        type="button"
-                        className={styles["password-toggle"]}
-                        onClick={() => setShowPassword(prev => !prev)}
-                    >
-                        {showPassword ? "Hide Password" : "Show Password"}
-                    </button>
-                </div>
-                {isPasswordFocused && (
-                    <div className={styles["password-validation"]}>
-                        <p className={passwordValidation.length ? styles.valid : styles.invalid}>
-                            {passwordValidation.length ? "✓" : "✗"} Password must be between 8 and 64 characters
-                        </p>
-                        <p className={passwordValidation.numberSpecial ? styles.valid : styles.invalid}>
-                            {passwordValidation.numberSpecial ? "✓" : "✗"} Password must contain at least one number and one special character
-                        </p>
-                        <p className={passwordValidation.upperLower ? styles.valid : styles.invalid}>
-                            {passwordValidation.upperLower ? "✓" : "✗"} Password must contain at least one uppercase and one lowercase letter
-                        </p>
+                <img className={styles.logo} src={logo} alt="Logo"></img>
+                <div className={styles["form-container"]}>
+                    <div className={styles["wrapper"]}>
+                        <img
+                            src={emailIcon}
+                            alt="email icon"
+                            className={styles["icon"]}
+                        />
+                        <input
+                            className={styles.button}
+                            type="email" placeholder="Email"
+                            value={email} onChange={(e) => setEmail(e.target.value)}
+                            onKeyDown={(e) => { if (e.key === 'Enter') handleRegister(); }}
+                        />
                     </div>
-                )}
-
-                <div className={styles["wrapper"]}>
-                    <img
-                        src={nameIcon}
-                        alt="name icon"
-                        className={styles["icon"]}
-                    />
-                    <input
-                    className={styles.button}
-                    type="text"
-                    placeholder="Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === 'Enter') handleRegister(); }}
-                    />
-                </div>
-
-                {
-                    error && (
-                        <div className={styles["error-text"]}>
-                            {error}
+                    <div className={styles["wrapper"]}>
+                        <img
+                            src={userIcon}
+                            alt="user icon"
+                            className={styles["icon"]}
+                        />
+                        <input
+                            className={styles.button}
+                            type="text" placeholder="Username"
+                            value={username} onChange={(e) => setUsername(e.target.value)}
+                            onKeyDown={(e) => { if (e.key === 'Enter') handleRegister(); }}
+                        />
+                    </div>
+                    <div className={styles["wrapper"]}>
+                        <img
+                            src={passwordIcon}
+                            alt="password icon"
+                            className={styles["icon"]}
+                        />
+                        <input
+                            className={styles.button}
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            onFocus={() => setIsPasswordFocused(true)}
+                            onBlur={() => setIsPasswordFocused(false)}
+                        />
+                        <button
+                            type="button"
+                            className={styles["password-toggle"]}
+                            onClick={() => setShowPassword(prev => !prev)}
+                        >
+                            {showPassword ? "Hide Password" : "Show Password"}
+                        </button>
+                    </div>
+                    {isPasswordFocused && (
+                        <div className={styles["password-validation"]}>
+                            <p className={passwordValidation.length ? styles.valid : styles.invalid}>
+                                {passwordValidation.length ? "✓" : "✗"} Password must be between 8 and 64 characters
+                            </p>
+                            <p className={passwordValidation.numberSpecial ? styles.valid : styles.invalid}>
+                                {passwordValidation.numberSpecial ? "✓" : "✗"} Password must contain at least one number and one special character
+                            </p>
+                            <p className={passwordValidation.upperLower ? styles.valid : styles.invalid}>
+                                {passwordValidation.upperLower ? "✓" : "✗"} Password must contain at least one uppercase and one lowercase letter
+                            </p>
                         </div>
                     )}
-                <button className={styles.button2} type="submit" onClick={() => {handleRegister();}}
-                        disabled={isLoading}>{isLoading ? "Creating account..." : "Create account"}</button>
-                <p className={styles.color}>Have an account already? <Link className="link" to="/">Log in</Link></p>
 
+                    <div className={styles["wrapper"]}>
+                        <img
+                            src={nameIcon}
+                            alt="name icon"
+                            className={styles["icon"]}
+                        />
+                        <input
+                            className={styles.button}
+                            type="text"
+                            placeholder="Name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            onKeyDown={(e) => { if (e.key === 'Enter') handleRegister(); }}
+                        />
+                    </div>
+
+                    {
+                        error && (
+                            <div className={styles["error-text"]}>
+                                {error}
+                            </div>
+                        )}
+                    <button className={styles.button2} type="submit" onClick={() => {handleRegister();}}
+                            disabled={isLoading}>{isLoading ? "Creating account..." : "Create account"}</button>
+                    <p className={styles.color}>Have an account already? <Link className="link" to="/">Log in</Link></p>
+                    <ThemeToggle />
+
+                </div>
             </div>
-        </div>
         </div>
     );
 }

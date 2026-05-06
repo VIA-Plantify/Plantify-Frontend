@@ -6,8 +6,11 @@ import { getPlant, getPlants } from "../api/Plants/plantApi.ts";
 import { getErrorMessage } from "../api/authApi";
 import type { Plant } from "../api/Plants/plantTypes.ts";
 import plantImg from "../assets/plant.placeholder.png";
+import { useTheme } from '../theme/ThemeContext';
+import { ThemeToggle } from '../theme/ThemeToggle';
 
 export function PlantInfo() {
+    const { theme } = useTheme();
     const navigate = useNavigate();
     const [plant, setPlant] = useState<Plant | null>(null);
     const [allPlants, setAllPlants] = useState<Plant[]>([]);
@@ -84,7 +87,7 @@ export function PlantInfo() {
         const chartHeight = height - 2 * padding;
 
         const maxValue = 100;
-       // const minValue = 0;
+        // const minValue = 0;
 
         const xStep = chartWidth / (chartData.length - 1);
         const points = chartData.map((value, index) => {
@@ -198,8 +201,7 @@ export function PlantInfo() {
     };
 
     return (
-        <div className={styles["plant-info-container"]}>
-
+        <div className={`${styles["plant-info-container"]} ${theme === 'dark' ? styles.dark : ''}`}>
             <div className={styles["top-bar"]}>
                 <div className={styles["left-buttons"]}>
                     <button className={styles["add-btn"]} onClick={handleAddPlant}>
@@ -219,6 +221,7 @@ export function PlantInfo() {
                 </div>
 
                 <div className={styles["user-area"]}>
+                    <ThemeToggle/>
                     <div className={styles["user-info"]}>
                         <span className={styles["user-name"]}>{displayName}</span>
                         <span className={styles["user-username"]}>@{username}</span>
@@ -279,7 +282,6 @@ export function PlantInfo() {
                     renderLineChart()
                 )}
             </div>
-
             {error && <p className={styles["error-text"]}>{error}</p>}
         </div>
     );

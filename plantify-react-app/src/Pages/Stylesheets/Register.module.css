@@ -5,10 +5,13 @@
 }
 
 body {
-    background-color: white;
     margin: 0;
     padding: 0;
     font-weight: bold;
+}
+
+.dark .body, .dark.body {
+    background-color: #1a1a1a;
 }
 
 .register-container {
@@ -18,7 +21,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: white;
 }
 
 .register-canvas {
@@ -140,6 +142,10 @@ a, a:visited, a:hover, a:active, a:focus {
     color: black;
     font-size: 15px;
     text-align: center;
+}
+
+.dark .color, .dark.color{
+    color: white;
 }
 
 .error-text {
