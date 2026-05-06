@@ -7,7 +7,6 @@ import { ThemeProvider } from './theme/ThemeContext';
 
 function App() {
 
-
     return (
         <ThemeProvider>
             <BrowserRouter>
