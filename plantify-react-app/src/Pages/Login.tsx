@@ -266,9 +266,6 @@ export function Login() {
 
                     {userData && (
                         <div className={styles["user-info-panel"]}>
-                            <h3>Welcome, {userData.username}!</h3>
-                            <p><strong>Username:</strong> {userData.username}</p>
-                            <p><strong>Email:</strong> {userData.email}</p>
                             <button className={styles.button2} onClick={handleLogout}>Logout</button>
                             <p><Link className={styles.link} to="/PlantInfo">Back up for now</Link></p>
                         </div>

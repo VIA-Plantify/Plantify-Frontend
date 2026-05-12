@@ -9,8 +9,13 @@ export interface Plant {
     optimalLightPeriod?: number;  // bigint in DB
     temperatureScale?: number;
     soilHumidity?: SoilHumidity;
+    waterLevel?: WaterLevel;
 }
 
+export interface WaterLevel {
+    pastReadings: number[];
+    value: number;
+}
 export interface CreatePlantRequest {
     mac: string;
     name: string;
