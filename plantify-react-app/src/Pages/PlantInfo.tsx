@@ -116,7 +116,6 @@ export function PlantInfo() {
     return (
         <div className={styles["plant-info-container"]}>
 
-            {/* Top bar */}
             <div className={styles["top-bar"]}>
                 <div className={styles["left-buttons"]}>
                     <button className={styles["add-btn"]} onClick={() => navigate("/AddPlant")}>
@@ -143,7 +142,7 @@ export function PlantInfo() {
                 </div>
             </div>
 
-            {/* Main layout */}
+
             <div className={styles["plant-info-content"]}>
                 <div className={styles["left-boxes"]}>
                     {leftMetrics.map((metric) => (
@@ -172,7 +171,7 @@ export function PlantInfo() {
                 </div>
             </div>
 
-            {/* Live sensor readings */}
+
             {plant?.sensorData && (
                 <div className={styles["chart-section"]} style={{ marginTop: "20px" }}>
                     <h3 className={styles["chart-title"]}>Latest sensor reading</h3>
@@ -192,7 +191,7 @@ export function PlantInfo() {
                 </div>
             )}
 
-            {/* Watering info */}
+
             {plant?.watering && (
                 <div className={styles["chart-section"]} style={{ marginTop: "20px" }}>
                     <h3 className={styles["chart-title"]}>Watering</h3>

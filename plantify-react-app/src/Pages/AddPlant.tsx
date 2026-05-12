@@ -213,7 +213,7 @@ export function AddPlant() {
     return (
         <div className={styles["plant-info-container"]} onClick={() => dropdownOpen && setDropdownOpen(false)}>
 
-            {/* Top Bar */}
+
             <div className={styles["top-bar"]}>
                 <div className={styles["left-buttons"]}>
                     <button className={styles["back-btn"]} onClick={() => navigate("/PlantInfo")}>
@@ -231,7 +231,7 @@ export function AddPlant() {
                 </div>
             </div>
 
-            {/* Preset picker */}
+
             <div className={styles["preset-section"]} onClick={(e) => e.stopPropagation()}>
                 <button
                     className={styles["preset-trigger"]}
@@ -262,7 +262,7 @@ export function AddPlant() {
                 )}
             </div>
 
-            {/* MAC + Name inputs */}
+
             <div className={styles["plant-header"]}>
                 <div className={styles["header-field"]}>
                     <label className={styles["header-label"]}>MAC Address</label>
@@ -287,7 +287,7 @@ export function AddPlant() {
                 </div>
             </div>
 
-            {/* Main layout */}
+
             <div className={styles["plant-info-content"]}>
                 <div className={styles["left-boxes"]}>{leftFields.map(renderBox)}</div>
                 <div className={styles["center-image"]}>
@@ -296,7 +296,7 @@ export function AddPlant() {
                 <div className={styles["right-boxes"]}>{rightFields.map(renderBox)}</div>
             </div>
 
-            {/* Light Period + Submit */}
+
             <div className={styles["bottom-section"]}>
                 <div className={styles["light-period-field"]}>
                     <label className={styles["header-label"]}>Light Period (hours)</label>
