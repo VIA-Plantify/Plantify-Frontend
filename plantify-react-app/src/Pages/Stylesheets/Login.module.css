@@ -1,7 +1,18 @@
+@font-face {
+    font-family: "Coolvetica";
+    src: url("https://db.onlinewebfonts.com/t/efd86b69ab539177c9f077bd67c914ab.eot");
+    src: url("https://db.onlinewebfonts.com/t/efd86b69ab539177c9f077bd67c914ab.eot?#iefix")format("embedded-opentype"),
+    url("https://db.onlinewebfonts.com/t/efd86b69ab539177c9f077bd67c914ab.woff2")format("woff2"),
+    url("https://db.onlinewebfonts.com/t/efd86b69ab539177c9f077bd67c914ab.woff")format("woff"),
+    url("https://db.onlinewebfonts.com/t/efd86b69ab539177c9f077bd67c914ab.ttf")format("truetype"),
+    url("https://db.onlinewebfonts.com/t/efd86b69ab539177c9f077bd67c914ab.svg#Coolvetica")format("svg");
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: "Coolvetica", arial;
 }
 
 body {
