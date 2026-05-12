@@ -14,16 +14,26 @@ export function PlantInfo() {
     const navigate = useNavigate();
     const [plant, setPlant] = useState<Plant | null>(null);
     const [allPlants, setAllPlants] = useState<Plant[]>([]);
+    const [userData, setUserData] = useState<{username: string; name: string} | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [selectedMac, setSelectedMac] = useState("84:f3:eb:95:b4:b3");
 
-    const userStr = Cookies.get("user");
-    const user = userStr ? JSON.parse(decodeURIComponent(userStr)) : null;
-    const displayName = user?.name || user?.username || "User";
-    const username = user?.username || "unknown";
 
     useEffect(() => {
+        const userStr = Cookies.get('user');
+
+        if (userStr) {
+            try {
+                const decoded = decodeURIComponent(userStr);
+                const user = JSON.parse(decoded);
+                setUserData(user);
+                console.log("Session restored:", user);
+            } catch (e) {
+                console.error("Failed to parse user data", e);
+            }
+        }
+
         fetchPlant(selectedMac);
         fetchAllPlants();
     }, [selectedMac]);
@@ -57,6 +67,7 @@ export function PlantInfo() {
     const handleLogout = () => {
         Cookies.remove("user");
         navigate("/");
+        setUserData(null);
     };
 
     const scaleLabel = plant?.temperatureScale === 0 ? "°C" : "°F";
@@ -275,16 +286,19 @@ export function PlantInfo() {
                     </select>
                 </div>
 
-                <div className={styles["user-area"]}>
-                    <ThemeToggle/>
-                    <div className={styles["user-info"]}>
-                        <span className={styles["user-name"]}>{displayName}</span>
-                        <span className={styles["user-username"]}>@{username}</span>
+                {userData && (
+                    <div className={styles["user-area"]}>
+                        <ThemeToggle/>
+                        <div className={styles["user-info"]}>
+                            <span className={styles["user-name"]}>{userData.name}</span>
+                            <span className={styles["user-username"]}>@{userData.username}</span>
+                        </div>
+                        <button className={styles["logout-btn"]} onClick={handleLogout}>
+                            Logout
+                        </button>
                     </div>
-                    <button className={styles["logout-btn"]} onClick={handleLogout}>
-                        Logout
-                    </button>
-                </div>
+                )}
+
             </div>
 
             <div className={styles["plant-info-content"]}>

@@ -2,6 +2,7 @@ export interface LoginRequest {
     email?: string;
     username?: string;
     password: string;
+    name?: string;
 }
 
 export interface RegisterRequest {
@@ -14,11 +15,13 @@ export interface RegisterRequest {
 export interface AuthUser {
     username: string;
     email: string;
+    name: string;
 }
 
 export interface JwtPayload {
     Username: string;
     Email: string;
+    Name: string;
     exp?: number;
     iat?: number;
     [key: string]: unknown;
