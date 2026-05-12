@@ -18,7 +18,7 @@ export function Login() {
     const { theme } = useTheme();
     const [emailOrUsername, setEmailOrUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [userData, setUserData] = useState<{username: string; email: string} | null>(null);
+    const [userData, setUserData] = useState<{username: string; email: string; name: string} | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -175,7 +175,8 @@ export function Login() {
 
             const userInfo = {
                 username: response.data.username || emailOrUsername,
-                email: response.data.email || emailOrUsername
+                email: response.data.email || emailOrUsername,
+                name: response.data.name,
             };
 
             Cookies.set('user', JSON.stringify(userInfo), {

@@ -169,7 +169,8 @@ export function Register()
 
             const userInfo = {
                 username: response.data.username || username,
-                email: response.data.email || email
+                email: response.data.email || email,
+                name: response.data.name || name,
             };
 
             Cookies.set('user', JSON.stringify(userInfo), {
