@@ -5,7 +5,6 @@ import Cookies from "js-cookie";
 import { getPlant, getPlants } from "../api/Plants/plantApi.ts";
 import { getErrorMessage } from "../api/authApi";
 import type { Plant } from "../api/Plants/plantTypes.ts";
-import plantImg from "../assets/plant.placeholder.png";
 import { useTheme } from '../theme/ThemeContext';
 import { ThemeToggle } from '../theme/ThemeToggle';
 
@@ -18,6 +17,7 @@ export function PlantInfo() {
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [selectedMac, setSelectedMac] = useState("84:f3:eb:95:b4:b3");
+    const [waterLevel, setWaterLevel] = useState(0);
 
 
     useEffect(() => {
@@ -37,6 +37,12 @@ export function PlantInfo() {
         fetchPlant(selectedMac);
         fetchAllPlants();
     }, [selectedMac]);
+
+    useEffect(() => {
+        if (plant?.waterLevel?.value !== undefined) {
+            setWaterLevel(plant.waterLevel.value);
+        }
+    }, [plant]);
 
     const fetchPlant = async (mac: string) => {
         setIsLoading(true);
@@ -84,6 +90,28 @@ export function PlantInfo() {
 
     const readings = plant?.soilHumidity?.pastReadings || [];
     const chartData = readings.slice(0, 20);
+
+
+    const WaterTank = ({ waterLevel }: { waterLevel: number }) => {
+        const percent = Math.min(100, Math.max(0, waterLevel));
+
+        return (
+            <div className={styles["water-tank-container"]}>
+                <div className={styles["water-tank"]}>
+                    <div
+                        className={styles["water-fill"]}
+                        style={{ height: `${percent}%` }}
+                    />
+                </div>
+                <div className={styles["water-percent"]}>
+                    {percent}%
+                </div>
+                <div className={styles["water-label"]}>
+                    WATER CAPACITY
+                </div>
+            </div>
+        );
+    };
 
     const renderLineChart = () => {
         const width = 800;
@@ -318,11 +346,7 @@ export function PlantInfo() {
                 </div>
 
                 <div className={styles["center-image"]}>
-                    <img
-                        className={styles["plant-image"]}
-                        src={plantImg}
-                        alt="Plant"
-                    />
+                    <WaterTank waterLevel={waterLevel} />
                 </div>
 
                 <div className={styles["right-boxes"]}>
@@ -345,6 +369,7 @@ export function PlantInfo() {
                 <h3 className={styles["chart-title"]}>Soil Humidity History</h3>
                 {renderLineChart()}
             </div>
+
             {error && <p className={styles["error-text"]}>{error}</p>}
         </div>
     );
