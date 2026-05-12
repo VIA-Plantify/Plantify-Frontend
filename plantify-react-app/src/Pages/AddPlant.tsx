@@ -157,9 +157,8 @@ export function AddPlant() {
                 optimalAirHumidity: form.optimalAirHumidity ? parseFloat(form.optimalAirHumidity) : undefined,
                 optimalSoilHumidity: form.optimalSoilHumidity ? parseFloat(form.optimalSoilHumidity) : undefined,
                 optimalLightIntensity: form.optimalLightIntensity ? parseFloat(form.optimalLightIntensity) : undefined,
-                optimalLightPeriod: form.optimalLightPeriod ? parseInt(form.optimalLightPeriod) : undefined,
             });
-            navigate("/PlantInfo");
+            navigate("/plant");
         } catch (err) {
             const { message } = getErrorMessage(err);
             setError(message);
@@ -214,9 +213,10 @@ export function AddPlant() {
     return (
         <div className={styles["plant-info-container"]} onClick={() => dropdownOpen && setDropdownOpen(false)}>
 
+            {/* Top Bar */}
             <div className={styles["top-bar"]}>
                 <div className={styles["left-buttons"]}>
-                    <button className={styles["back-btn"]} onClick={() => navigate("/PlantInfo")}>
+                    <button className={styles["back-btn"]} onClick={() => navigate("/plant")}>
                         ← Back
                     </button>
                 </div>

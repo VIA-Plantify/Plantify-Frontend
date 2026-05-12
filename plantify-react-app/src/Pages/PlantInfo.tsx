@@ -2,52 +2,48 @@
 import { useNavigate } from "react-router-dom";
 import styles from "./Stylesheets/PlantInfo.module.css";
 import Cookies from "js-cookie";
-import { getPlant, getPlants } from "../api/Plants/plantApi.ts";
+import { getPlant, getPlants } from "../api/Plants/plantApi";
 import { getErrorMessage } from "../api/authApi";
-import type { Plant } from "../api/Plants/plantTypes.ts";
-import { useTheme } from '../theme/ThemeContext';
-import { ThemeToggle } from '../theme/ThemeToggle';
+import type { Plant } from "../api/Plants/plantTypes";
+import plantImg from "../assets/plant.placeholder.png";
 
 export function PlantInfo() {
-    const { theme } = useTheme();
     const navigate = useNavigate();
+
+    const userStr = Cookies.get("user");
+    const user = userStr ? JSON.parse(decodeURIComponent(userStr)) : null;
+    const displayName = user?.name || user?.username || "User";
+    const username = user?.username || "unknown";
+
     const [plant, setPlant] = useState<Plant | null>(null);
     const [allPlants, setAllPlants] = useState<Plant[]>([]);
-    const [userData, setUserData] = useState<{username: string; name: string} | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [selectedMac, setSelectedMac] = useState("84:f3:eb:95:b4:b3");
-    const [waterLevel, setWaterLevel] = useState(0);
-
+    const [selectedMac, setSelectedMac] = useState<string>("");
 
     useEffect(() => {
-        const userStr = Cookies.get('user');
-
-        if (userStr) {
-            try {
-                const decoded = decodeURIComponent(userStr);
-                const user = JSON.parse(decoded);
-                setUserData(user);
-                console.log("Session restored:", user);
-            } catch (e) {
-                console.error("Failed to parse user data", e);
-            }
-        }
-
-        fetchPlant(selectedMac);
         fetchAllPlants();
+    }, []);
+
+    useEffect(() => {
+        if (selectedMac) fetchPlant(selectedMac);
     }, [selectedMac]);
 
-    useEffect(() => {
-        if (plant?.waterLevel?.value !== undefined) {
-            setWaterLevel(plant.waterLevel.value);
+    const fetchAllPlants = async () => {
+        try {
+            const plants = await getPlants();
+            setAllPlants(plants);
+            if (plants.length > 0) setSelectedMac(plants[0].mac);
+        } catch (err) {
+            const { message } = getErrorMessage(err);
+            setError(message);
         }
-    }, [plant]);
+    };
 
     const fetchPlant = async (mac: string) => {
         setIsLoading(true);
         try {
-            const data = await getPlant(mac, 10);
+            const data = await getPlant(mac, 10, 5);
             setPlant(data ?? null);
         } catch (err) {
             const { message } = getErrorMessage(err);
@@ -57,248 +53,73 @@ export function PlantInfo() {
         }
     };
 
-    const fetchAllPlants = async () => {
-        try {
-            const plants = await getPlants();
-            setAllPlants(plants);
-        } catch (err) {
-            console.error("Failed to fetch plants list", err);
-        }
-    };
-
-    const handleAddPlant = () => {
-        navigate("/AddPlant");
-    };
-
     const handleLogout = () => {
         Cookies.remove("user");
         navigate("/");
-        setUserData(null);
     };
 
     const scaleLabel = plant?.temperatureScale === 0 ? "°C" : "°F";
 
     const metrics = [
-        { label: "Light Intensity", value: plant?.optimalLightIntensity ?? null, unit: "%", key: "light" },
-        { label: "Soil Humidity", value: plant?.optimalSoilHumidity ?? null, unit: "%", key: "soil" },
-        { label: "Air Humidity", value: plant?.optimalAirHumidity ?? null, unit: "%", key: "air" },
-        { label: "Temperature", value: plant?.optimalTemperature ?? null, unit: scaleLabel, key: "temp" }
+        { label: "Light",        value: plant?.optimalLightIntensity ?? null, unit: "%",       key: "light" },
+        { label: "Soil Humidity",value: plant?.optimalSoilHumidity   ?? null, unit: "%",       key: "soil"  },
+        { label: "Air Humidity", value: plant?.optimalAirHumidity    ?? null, unit: "%",       key: "air"   },
+        { label: "Temperature",  value: plant?.optimalTemperature    ?? null, unit: scaleLabel, key: "temp"  },
     ];
 
-    const leftMetrics = metrics.slice(0, 2);
+    const leftMetrics  = metrics.slice(0, 2);
     const rightMetrics = metrics.slice(2, 4);
 
-    const readings = plant?.soilHumidity?.pastReadings || [];
-    const chartData = readings.slice(0, 20);
-
-
-    const WaterTank = ({ waterLevel }: { waterLevel: number }) => {
-        const percent = Math.min(100, Math.max(0, waterLevel));
-
-        return (
-            <div className={styles["water-tank-container"]}>
-                <div className={styles["water-tank"]}>
-                    <div
-                        className={styles["water-fill"]}
-                        style={{ height: `${percent}%` }}
-                    />
-                </div>
-                <div className={styles["water-percent"]}>
-                    {percent}%
-                </div>
-                <div className={styles["water-label"]}>
-                    WATER CAPACITY
-                </div>
-            </div>
-        );
-    };
+    const soilReadings = plant?.sensorData ? [plant.sensorData.soilHumidity] : [];
 
     const renderLineChart = () => {
-        const width = 800;
-        const height = 300;
-        const padding = 40;
-        const chartWidth = width - 2 * padding;
-        const chartHeight = height - 2 * padding;
-
-        const hasNoData = chartData.length === 0;
-
-        if (hasNoData) {
-            return (
-                <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="xMidYMid meet">
-
-                    {[0, 25, 50, 75, 100].map((level) => {
-                        const y = padding + chartHeight - (level / 100) * chartHeight;
-                        return (
-                            <g key={level}>
-                                <line
-                                    x1={padding}
-                                    y1={y}
-                                    x2={width - padding}
-                                    y2={y}
-                                    stroke="#ddd"
-                                    strokeWidth="1"
-                                    strokeDasharray="4"
-                                />
-                                <text
-                                    x={padding - 8}
-                                    y={y + 4}
-                                    fontSize="11"
-                                    fill="#888"
-                                    textAnchor="end"
-                                >
-                                    {level}%
-                                </text>
-                            </g>
-                        );
-                    })}
-
-                    <text
-                        x={width / 2}
-                        y={height / 2}
-                        fontSize="16"
-                        fill="#999"
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                    >
-                        No soil humidity data available
-                    </text>
-
-                    <text
-                        x={width / 2}
-                        y={height - 8}
-                        fontSize="12"
-                        fill="#11ae5e"
-                        textAnchor="middle"
-                        fontWeight="bold"
-                    >
-                        Reading Number
-                    </text>
-                    <text
-                        x={1}
-                        y={height / 2}
-                        fontSize="12"
-                        fill="#11ae5e"
-                        textAnchor="middle"
-                        fontWeight="bold"
-                        transform={`rotate(-90, 1, ${height / 2})`}
-                    >
-                        Humidity (%)
-                    </text>
-                </svg>
-            );
+        if (!soilReadings.length || soilReadings.every(v => v == null)) {
+            return <p className={styles["no-data"]}>No soil humidity data available</p>;
         }
 
-        const maxValue = 100;
-        const xStep = chartWidth / (chartData.length - 1);
-        const points = chartData.map((value, index) => {
+        const data = soilReadings.filter((v): v is number => v != null);
+        const width = 800, height = 300, padding = 40;
+        const chartWidth = width - 2 * padding;
+        const chartHeight = height - 2 * padding;
+        const xStep = data.length > 1 ? chartWidth / (data.length - 1) : 0;
+
+        const points = data.map((value, index) => {
             const x = padding + index * xStep;
-            const y = padding + chartHeight - (value / maxValue) * chartHeight;
+            const y = padding + chartHeight - (value / 100) * chartHeight;
             return `${x},${y}`;
         }).join(" ");
 
         return (
             <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="xMidYMid meet">
-
+                <rect width={width} height={height} fill="#f9f9f9" rx="10" />
                 {[0, 25, 50, 75, 100].map((level) => {
-                    const y = padding + chartHeight - (level / maxValue) * chartHeight;
+                    const y = padding + chartHeight - (level / 100) * chartHeight;
                     return (
                         <g key={level}>
-                            <line
-                                x1={padding}
-                                y1={y}
-                                x2={width - padding}
-                                y2={y}
-                                stroke="#ddd"
-                                strokeWidth="1"
-                                strokeDasharray="4"
-                            />
-                            <text
-                                x={padding - 8}
-                                y={y + 4}
-                                fontSize="11"
-                                fill="#888"
-                                textAnchor="end"
-                            >
-                                {level}%
-                            </text>
+                            <line x1={padding} y1={y} x2={width - padding} y2={y} stroke="#ddd" strokeWidth="1" strokeDasharray="4"/>
+                            <text x={padding - 8} y={y + 4} fontSize="11" fill="#888" textAnchor="end">{level}%</text>
                         </g>
                     );
                 })}
-
-                <polyline
-                    points={points}
-                    fill="none"
-                    stroke="#11ae5e"
-                    strokeWidth="3"
-                    strokeLinejoin="round"
-                    strokeLinecap="round"
-                />
-
-                {chartData.map((value, index) => {
+                <polyline points={points} fill="none" stroke="#11ae5e" strokeWidth="3" strokeLinejoin="round" strokeLinecap="round"/>
+                {data.map((value, index) => {
                     const x = padding + index * xStep;
-                    const y = padding + chartHeight - (value / maxValue) * chartHeight;
-                    return (
-                        <circle
-                            key={index}
-                            cx={x}
-                            cy={y}
-                            r="4"
-                            fill="#11ae5e"
-                            stroke="white"
-                            strokeWidth="2"
-                        />
-                    );
+                    const y = padding + chartHeight - (value / 100) * chartHeight;
+                    return <circle key={index} cx={x} cy={y} r="4" fill="#11ae5e" stroke="white" strokeWidth="2"/>;
                 })}
-
-                {chartData.map((_, index) => {
-                    const x = padding + index * xStep;
-                    if (index % Math.ceil(chartData.length / 5) === 0 || index === chartData.length - 1) {
-                        return (
-                            <text
-                                key={index}
-                                x={x}
-                                y={height - padding + 15}
-                                fontSize="10"
-                                fill="#888"
-                                textAnchor="middle"
-                            >
-                                {index + 1}
-                            </text>
-                        );
-                    }
-                    return null;
-                })}
-
-                <text
-                    x={width / 2}
-                    y={height - 8}
-                    fontSize="12"
-                    fill="#11ae5e"
-                    textAnchor="middle"
-                    fontWeight="bold"
-                >
-                    Reading Number
-                </text>
-                <text
-                    x={1}
-                    y={height / 2}
-                    fontSize="12"
-                    fill="#11ae5e"
-                    textAnchor="middle"
-                    fontWeight="bold"
-                    transform={`rotate(-90, 1, ${height / 2})`}
-                >
-                    Humidity (%)
-                </text>
+                <text x={width / 2} y={height - 8} fontSize="12" fill="#11ae5e" textAnchor="middle" fontWeight="bold">Reading Number</text>
+                <text x={15} y={height / 2} fontSize="12" fill="#11ae5e" textAnchor="middle" fontWeight="bold" transform={`rotate(-90, 15, ${height / 2})`}>Humidity (%)</text>
             </svg>
         );
     };
 
     return (
-        <div className={`${styles["plant-info-container"]} ${theme === 'dark' ? styles.dark : ''}`}>
+        <div className={styles["plant-info-container"]}>
+
+            {/* Top bar */}
             <div className={styles["top-bar"]}>
                 <div className={styles["left-buttons"]}>
-                    <button className={styles["add-btn"]} onClick={handleAddPlant}>
+                    <button className={styles["add-btn"]} onClick={() => navigate("/AddPlant")}>
                         + Add Plant
                     </button>
                     <select
@@ -313,40 +134,30 @@ export function PlantInfo() {
                         ))}
                     </select>
                 </div>
-
-                {userData && (
-                    <div className={styles["user-area"]}>
-                        <ThemeToggle/>
-                        <div className={styles["user-info"]}>
-                            <span className={styles["user-name"]}>{userData.name}</span>
-                            <span className={styles["user-username"]}>@{userData.username}</span>
-                        </div>
-                        <button className={styles["logout-btn"]} onClick={handleLogout}>
-                            Logout
-                        </button>
+                <div className={styles["user-area"]}>
+                    <div className={styles["user-info"]}>
+                        <span className={styles["user-name"]}>{displayName}</span>
+                        <span className={styles["user-username"]}>@{username}</span>
                     </div>
-                )}
-
+                    <button className={styles["logout-btn"]} onClick={handleLogout}>Logout</button>
+                </div>
             </div>
 
+            {/* Main layout */}
             <div className={styles["plant-info-content"]}>
                 <div className={styles["left-boxes"]}>
                     {leftMetrics.map((metric) => (
                         <div key={metric.key} className={styles.box}>
                             <div className={styles["box-label"]}>{metric.label}</div>
                             <div className={styles["box-value"]}>
-                                {isLoading ? "..." : (
-                                    metric.value != null
-                                        ? `${metric.value}${metric.unit}`
-                                        : "—"
-                                )}
+                                {isLoading ? "..." : metric.value != null ? `${metric.value}${metric.unit}` : "—"}
                             </div>
                         </div>
                     ))}
                 </div>
 
                 <div className={styles["center-image"]}>
-                    <WaterTank waterLevel={waterLevel} />
+                    <img className={styles["plant-image"]} src={plantImg} alt="Plant"/>
                 </div>
 
                 <div className={styles["right-boxes"]}>
@@ -354,20 +165,56 @@ export function PlantInfo() {
                         <div key={metric.key} className={styles.box}>
                             <div className={styles["box-label"]}>{metric.label}</div>
                             <div className={styles["box-value"]}>
-                                {isLoading ? "..." : (
-                                    metric.value != null
-                                        ? `${metric.value}${metric.unit}`
-                                        : "—"
-                                )}
+                                {isLoading ? "..." : metric.value != null ? `${metric.value}${metric.unit}` : "—"}
                             </div>
                         </div>
                     ))}
                 </div>
             </div>
 
+            {/* Live sensor readings */}
+            {plant?.sensorData && (
+                <div className={styles["chart-section"]} style={{ marginTop: "20px" }}>
+                    <h3 className={styles["chart-title"]}>Latest sensor reading</h3>
+                    <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
+                        {[
+                            { label: "Temperature",   value: plant.sensorData.temperature,  unit: scaleLabel },
+                            { label: "Air Humidity",  value: plant.sensorData.airHumidity,  unit: "%" },
+                            { label: "Soil Humidity", value: plant.sensorData.soilHumidity, unit: "%" },
+                            { label: "Light",         value: plant.sensorData.lightIntensity, unit: "%" },
+                        ].map((s) => (
+                            <div key={s.label} className={styles.box} style={{ minWidth: "140px" }}>
+                                <div className={styles["box-label"]}>{s.label}</div>
+                                <div className={styles["box-value"]}>{s.value != null ? `${s.value}${s.unit}` : "—"}</div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* Watering info */}
+            {plant?.watering && (
+                <div className={styles["chart-section"]} style={{ marginTop: "20px" }}>
+                    <h3 className={styles["chart-title"]}>Watering</h3>
+                    <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
+                        <div className={styles.box} style={{ minWidth: "160px" }}>
+                            <div className={styles["box-label"]}>Last watered</div>
+                            <div className={styles["box-value"]} style={{ fontSize: "16px" }}>
+                                {plant.watering.lastWaterTime ? new Date(plant.watering.lastWaterTime).toLocaleDateString() : "—"}
+                            </div>
+                        </div>
+                        <div className={styles.box} style={{ minWidth: "160px" }}>
+                            <div className={styles["box-label"]}>Water level</div>
+                            <div className={styles["box-value"]}>{plant.watering.waterLevel != null ? `${plant.watering.waterLevel}%` : "—"}</div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Soil humidity chart */}
             <div className={styles["chart-section"]}>
                 <h3 className={styles["chart-title"]}>Soil Humidity History</h3>
-                {renderLineChart()}
+                {isLoading ? <p>Loading chart...</p> : renderLineChart()}
             </div>
 
             {error && <p className={styles["error-text"]}>{error}</p>}
