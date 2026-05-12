@@ -6,16 +6,30 @@ export interface Plant {
     optimalAirHumidity?: number;
     optimalSoilHumidity?: number;
     optimalLightIntensity?: number;
-    optimalLightPeriod?: number;  // bigint in DB
     temperatureScale?: number;
-    soilHumidity?: SoilHumidity;
-    waterLevel?: WaterLevel;
+    sensorData?: SensorData;
+    watering?: Watering;
+    previousSensorData?: SensorData[];
+    previousWaterings?: Watering[];
 }
 
-export interface WaterLevel {
-    pastReadings: number[];
-    value: number;
+export interface SensorData {
+    temperature?: number;
+    airHumidity?: number;
+    soilHumidity?: number;
+    lightIntensity?: number;
+    timestamp?: string;
+    plantMAC?: string;
 }
+
+export interface Watering {
+    pumpTimeInSeconds?: number;
+    lastWaterTime?: string;
+    predictedFutureWaterTime?: string;
+    waterLevel?: number;
+    plantMAC?: string;
+}
+
 export interface CreatePlantRequest {
     mac: string;
     name: string;
@@ -24,20 +38,4 @@ export interface CreatePlantRequest {
     optimalAirHumidity?: number;
     optimalSoilHumidity?: number;
     optimalLightIntensity?: number;
-    optimalLightPeriod?: number;
-}
-
-export interface UpdatePlantRequest {
-    name: string;
-    optimalTemperature?: number;
-    optimalAirHumidity?: number;
-    optimalSoilHumidity?: number;
-    optimalLightIntensity?: number;
-    optimalLightPeriod?: number;
-    temperatureScale?: number;
-}
-
-export interface SoilHumidity {
-    pastReadings: number[];
-    value: number;
 }
