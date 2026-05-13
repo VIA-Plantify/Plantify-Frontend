@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import styles from "./Stylesheets/PlantInfo.module.css";
 import Cookies from "js-cookie";
-import { getPlant, getPlants } from "../api/Plants/plantApi";
+import { getPlant, getPlants, updatePlant } from "../api/Plants/plantApi";
 import { getErrorMessage } from "../api/authApi";
 import type { Plant } from "../api/Plants/plantTypes";
 import plantImg from "../assets/PLANT.png";
@@ -160,6 +160,7 @@ function PlantPot({ waterLevel, isLoading }: { waterLevel: number; isLoading: bo
 }
 
 export function PlantInfo() {
+
     const navigate = useNavigate();
 
     const userStr = Cookies.get("user");
@@ -200,12 +201,33 @@ export function PlantInfo() {
         }
     };
 
+    const handleScaleToggle = async () => {
+        if (!plant) return;
+        try {
+            const newScale = plant.scale === 0 ? 1 : 0;
+            await updatePlant(plant.mac, {
+                mac: plant.mac,
+                name: plant.name,
+                username: plant.username,
+                scale: newScale,
+                optimalTemperature: plant.optimalTemperature,
+                optimalAirHumidity: plant.optimalAirHumidity,
+                optimalSoilHumidity: plant.optimalSoilHumidity,
+                optimalLightIntensity: plant.optimalLightIntensity,
+            });
+            await fetchPlant(plant.mac);
+        } catch (err) {
+            const { message } = getErrorMessage(err);
+            setError(message);
+        }
+    };
+
     const handleLogout = () => {
         Cookies.remove("user");
         navigate("/");
     };
 
-    const scaleLabel = plant?.temperatureScale === 0 ? "°C" : "°F";
+    const scaleLabel = plant?.scale === 0 ? "°C" : "°F";
     const waterLevel = plant?.watering?.waterLevel ?? 0;
 
     const metrics = [
@@ -266,6 +288,9 @@ export function PlantInfo() {
                 <div className={styles["left-buttons"]}>
                     <button className={styles["add-btn"]} onClick={() => navigate("/AddPlant")}>
                         + Add Plant
+                    </button>
+                    <button className={styles["add-btn"]} onClick={handleScaleToggle} disabled={!plant}>
+                        {plant?.scale === 0 ? "Switch to °F" : "Switch to °C"}
                     </button>
                     <select
                         className={styles["dropdown"]}

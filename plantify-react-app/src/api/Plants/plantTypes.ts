@@ -2,6 +2,7 @@ export interface Plant {
     mac: string;
     name: string;
     username: string;
+    scale?: number;
     optimalTemperature?: number;
     optimalAirHumidity?: number;
     optimalSoilHumidity?: number;
@@ -34,6 +35,7 @@ export interface CreatePlantRequest {
     mac: string;
     name: string;
     username: string;
+    scale?: number;
     optimalTemperature?: number;
     optimalAirHumidity?: number;
     optimalSoilHumidity?: number;
