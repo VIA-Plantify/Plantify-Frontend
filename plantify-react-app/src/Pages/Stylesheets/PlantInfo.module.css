@@ -176,6 +176,22 @@ body {
   justify-content: center;
   gap: 12px;
 }
+.scale-btn {
+  background-color: transparent;
+  color: #11ae5e;
+  border: 2px solid #11ae5e;
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.scale-btn:hover {
+  background-color: #11ae5e;
+  color: white;
+}
 
 .dark .box, .dark.box, .dark.box:hover {
   background-color: #1a1a1a;
@@ -319,5 +335,6 @@ body {
   .chart-title {
     font-size: 20px;
   }
+
 
 }

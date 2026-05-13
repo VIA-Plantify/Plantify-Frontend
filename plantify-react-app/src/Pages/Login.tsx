@@ -266,7 +266,7 @@ export function Login() {
                     )}
 
                     {userData && (
-                        <div className={styles["user-info-panel"]}>
+                        <div>
                             <button className={styles.button2} onClick={handleLogout}>Logout</button>
                             <p><Link className={styles.link} to="/PlantInfo">Back up for now</Link></p>
                         </div>

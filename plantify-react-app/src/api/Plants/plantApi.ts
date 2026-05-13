@@ -33,6 +33,7 @@ export const updatePlant = async (mac: string, data: Partial<CreatePlantRequest>
         MAC: mac,
         Name: data.name,
         Username: data.username,
+        Scale: data.scale,
         OptimalTemperature: data.optimalTemperature ?? 0,
         OptimalAirHumidity: data.optimalAirHumidity ?? 0,
         OptimalSoilHumidity: data.optimalSoilHumidity ?? 0,
