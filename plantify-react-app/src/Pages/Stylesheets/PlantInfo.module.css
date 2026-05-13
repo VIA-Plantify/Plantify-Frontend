@@ -35,7 +35,7 @@ body {
   gap: 24px;
   align-items: center;
   margin-left: 20px;
-  color: pink;
+  color: black;
 }
 
 .add-btn {
@@ -56,7 +56,7 @@ body {
 }
 
 .dropdown {
-  background-color: #f5f5f5;
+  background-color: white;
   border: 2px solid #11ae5e;
   border-radius: 50px;
   padding: 12px 24px;
@@ -65,10 +65,12 @@ body {
   cursor: pointer;
   outline: none;
   min-width: 200px;
+  color: black;
 }
 
 .dark .dropdown, .dark .dropdown {
   background: #1a1a1a;
+  color: white;
 }
 
 .user-area {
@@ -195,17 +197,14 @@ body {
 
 .dark .box, .dark.box, .dark.box:hover {
   background-color: #1a1a1a;
+  color: white;
 }
 
 .box:hover {
   transform: translateY(-8px);
   box-shadow: 0 10px 25px rgba(17, 174, 94, 0.25);
-  background-color: #ffffff;
 }
 
-.dark .box, .dark.box:hover {
-  background-color: #1a1a1a;
-}
 
 .box-label {
   font-size: 18px;
@@ -218,7 +217,11 @@ body {
 .box-value {
   font-size: 32px;
   font-weight: bold;
-  color: #222;
+  color: black;
+}
+
+.dark .box-value {
+  color: white;
 }
 
 
@@ -227,7 +230,7 @@ body {
   width: 100%;
   max-width: 1000px;
   padding: 20px;
-  background: #f9f9f9;
+  background: white;
   border-radius: 24px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
@@ -255,6 +258,10 @@ body {
   color: red;
   margin-top: 20px;
   text-align: center;
+}
+
+.graph {
+ background: pink;
 }
 
 @media (max-width: 900px) {

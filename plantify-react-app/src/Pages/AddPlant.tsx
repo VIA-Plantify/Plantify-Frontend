@@ -5,6 +5,8 @@ import { createPlant } from "../api/Plants/plantApi";
 import { getErrorMessage } from "../api/authApi";
 import styles from "./Stylesheets/AddPlant.module.css";
 import plantImg from "../assets/plant.placeholder.png";
+import { useTheme } from '../theme/ThemeContext';
+import { ThemeToggle } from '../theme/ThemeToggle';
 
 interface PlantPreset {
     emoji: string;
@@ -89,6 +91,7 @@ export function AddPlant() {
     const user = userStr ? JSON.parse(decodeURIComponent(userStr)) : null;
     const displayName = user?.name || user?.username || "User";
     const username = user?.username || "unknown";
+    const { theme } = useTheme();
 
     const [form, setForm] = useState({
         mac: "",
@@ -211,7 +214,7 @@ export function AddPlant() {
     );
 
     return (
-        <div className={styles["plant-info-container"]} onClick={() => dropdownOpen && setDropdownOpen(false)}>
+        <div className={`${styles["plant-info-container"]} ${theme === 'dark' ? styles.dark : ''}`} onClick={() => dropdownOpen && setDropdownOpen(false)}>
 
 
             <div className={styles["top-bar"]}>
@@ -225,6 +228,7 @@ export function AddPlant() {
                         <span className={styles["user-name"]}>{displayName}</span>
                         <span className={styles["user-username"]}>@{username}</span>
                     </div>
+                    <ThemeToggle/>
                     <button className={styles["logout-btn"]} onClick={handleLogout}>
                         Logout
                     </button>

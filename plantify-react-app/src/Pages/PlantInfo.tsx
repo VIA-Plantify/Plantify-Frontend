@@ -6,6 +6,8 @@ import { getPlant, getPlants, updatePlant } from "../api/Plants/plantApi";
 import { getErrorMessage } from "../api/authApi";
 import type { Plant } from "../api/Plants/plantTypes";
 import plantImg from "../assets/PLANT.png";
+import { useTheme } from '../theme/ThemeContext';
+import { ThemeToggle } from '../theme/ThemeToggle';
 
 function PlantPot({ waterLevel, isLoading }: { waterLevel: number; isLoading: boolean }) {
     const level = isLoading ? 0 : Math.min(100, Math.max(0, waterLevel ?? 0));
@@ -167,6 +169,7 @@ export function PlantInfo() {
     const user = userStr ? JSON.parse(decodeURIComponent(userStr)) : null;
     const displayName = user?.name || user?.username || "User";
     const username = user?.username || "unknown";
+    const { theme } = useTheme();
 
     const [plant, setPlant] = useState<Plant | null>(null);
     const [allPlants, setAllPlants] = useState<Plant[]>([]);
@@ -258,7 +261,7 @@ export function PlantInfo() {
         }).join(" ");
 
         return (
-            <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="xMidYMid meet">
+            <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="xMidYMid meet" className={styles["graph"]}>
                 <rect width={width} height={height} fill="#f9f9f9" rx="10" />
                 {[0, 25, 50, 75, 100].map((level) => {
                     const y = padding + chartHeight - (level / 100) * chartHeight;
@@ -276,13 +279,13 @@ export function PlantInfo() {
                     return <circle key={index} cx={x} cy={y} r="4" fill="#11ae5e" stroke="white" strokeWidth="2" />;
                 })}
                 <text x={width / 2} y={height - 8} fontSize="12" fill="#11ae5e" textAnchor="middle" fontWeight="bold">Reading Number</text>
-                <text x={15} y={height / 2} fontSize="12" fill="#11ae5e" textAnchor="middle" fontWeight="bold" transform={`rotate(-90, 15, ${height / 2})`}>Humidity (%)</text>
+                <text x={15} y={height / 2} fontSize="12" fill="#11ae5e" textAnchor="middle" fontWeight="bold" transform={`rotate(-90, 1, ${height / 2})`}>Humidity (%)</text>
             </svg>
         );
     };
 
     return (
-        <div className={styles["plant-info-container"]}>
+        <div className={`${styles["plant-info-container"]} ${theme === 'dark' ? styles.dark : ''}`}>
 
             <div className={styles["top-bar"]}>
                 <div className={styles["left-buttons"]}>
@@ -309,7 +312,9 @@ export function PlantInfo() {
                         <span className={styles["user-name"]}>{displayName}</span>
                         <span className={styles["user-username"]}>@{username}</span>
                     </div>
+                    <ThemeToggle/>
                     <button className={styles["logout-btn"]} onClick={handleLogout}>Logout</button>
+
                 </div>
             </div>
 
