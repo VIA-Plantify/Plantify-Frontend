@@ -1,18 +1,18 @@
 @font-face {
-    font-family: "Coolvetica";
-    src: url("https://db.onlinewebfonts.com/t/efd86b69ab539177c9f077bd67c914ab.eot");
-    src: url("https://db.onlinewebfonts.com/t/efd86b69ab539177c9f077bd67c914ab.eot?#iefix")format("embedded-opentype"),
-    url("https://db.onlinewebfonts.com/t/efd86b69ab539177c9f077bd67c914ab.woff2")format("woff2"),
-    url("https://db.onlinewebfonts.com/t/efd86b69ab539177c9f077bd67c914ab.woff")format("woff"),
-    url("https://db.onlinewebfonts.com/t/efd86b69ab539177c9f077bd67c914ab.ttf")format("truetype"),
-    url("https://db.onlinewebfonts.com/t/efd86b69ab539177c9f077bd67c914ab.svg#Coolvetica")format("svg");
+    font-family: "TBJ-45-extra Bold Sans Family Md";
+    src: url("https://db.onlinewebfonts.com/t/79616ad79ad0d50f25eb276589773acd.eot");
+    src: url("https://db.onlinewebfonts.com/t/79616ad79ad0d50f25eb276589773acd.eot?#iefix")format("embedded-opentype"),
+    url("https://db.onlinewebfonts.com/t/79616ad79ad0d50f25eb276589773acd.woff2")format("woff2"),
+    url("https://db.onlinewebfonts.com/t/79616ad79ad0d50f25eb276589773acd.woff")format("woff"),
+    url("https://db.onlinewebfonts.com/t/79616ad79ad0d50f25eb276589773acd.ttf")format("truetype"),
+    url("https://db.onlinewebfonts.com/t/79616ad79ad0d50f25eb276589773acd.svg#TBJ-45-extra Bold Sans Family Md")format("svg");
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Coolvetica", arial;
+    font-family: "TBJ-45-extra Bold Sans Family Md", arial;
 }
 
 body {
