@@ -260,10 +260,6 @@ body {
   text-align: center;
 }
 
-.graph {
- background: pink;
-}
-
 @media (max-width: 900px) {
   .plant-info-content {
     flex-direction: column;
