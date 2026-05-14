@@ -260,15 +260,19 @@ export function PlantInfo() {
             return `${x},${y}`;
         }).join(" ");
 
+        const bgColor = theme === 'dark' ? '#1a1a1a' : '#f9f9f9';
+        const gridColor = theme === 'dark' ? '#333' : '#ddd';
+        const labelColor = theme === 'dark' ? '#aaa' : '#888';
+
         return (
             <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="xMidYMid meet" className={styles["graph"]}>
-                <rect width={width} height={height} fill="#f9f9f9" rx="10" />
+                <rect width={width} height={height} fill={bgColor} rx="10" />
                 {[0, 25, 50, 75, 100].map((level) => {
                     const y = padding + chartHeight - (level / 100) * chartHeight;
                     return (
                         <g key={level}>
-                            <line x1={padding} y1={y} x2={width - padding} y2={y} stroke="#ddd" strokeWidth="1" strokeDasharray="4" />
-                            <text x={padding - 8} y={y + 4} fontSize="11" fill="#888" textAnchor="end">{level}%</text>
+                            <line x1={padding} y1={y} x2={width - padding} y2={y} stroke={gridColor} strokeWidth="1" strokeDasharray="4" />
+                            <text x={padding - 8} y={y + 4} fontSize="11" fill={labelColor} textAnchor="end">{level}%</text>
                         </g>
                     );
                 })}
