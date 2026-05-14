@@ -143,7 +143,7 @@ function PlantPot({ waterLevel, isLoading }: { waterLevel: number; isLoading: bo
             </div>
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4, width: "70%", maxWidth: 200, marginTop: 8 }}>
                 <span style={{ fontSize: 22, fontWeight: "bold", color: waterColor, transition: "color .8s ease" }}>
-                    {isLoading ? "—" : `${level}%`}
+                    {isLoading ? "—" : `${level.toFixed(1)}%`}
                 </span>
                 <div style={{ width: "100%", height: 10, background: "#e0e0e0", borderRadius: 999, overflow: "hidden" }}>
                     <div style={{
@@ -160,6 +160,9 @@ function PlantPot({ waterLevel, isLoading }: { waterLevel: number; isLoading: bo
         </div>
     );
 }
+
+const fmt = (value: number | null | undefined) =>
+    value != null ? value.toFixed(1) : null;
 
 export function PlantInfo() {
 
@@ -194,7 +197,7 @@ export function PlantInfo() {
     const fetchPlant = async (mac: string) => {
         setIsLoading(true);
         try {
-            const data = await getPlant(mac, 10, 5);
+            const data = await getPlant(mac, 50, 5);
             setPlant(data ?? null);
         } catch (err) {
             const { message } = getErrorMessage(err);
@@ -234,16 +237,18 @@ export function PlantInfo() {
     const waterLevel = plant?.watering?.waterLevel ?? 0;
 
     const metrics = [
-        { label: "Light",         value: plant?.optimalLightIntensity ?? null, unit: "%",        key: "light" },
-        { label: "Soil Humidity", value: plant?.optimalSoilHumidity   ?? null, unit: "%",        key: "soil"  },
-        { label: "Air Humidity",  value: plant?.optimalAirHumidity    ?? null, unit: "%",        key: "air"   },
-        { label: "Temperature",   value: plant?.optimalTemperature    ?? null, unit: scaleLabel, key: "temp"  },
+        { label: "Light",         value: fmt(plant?.optimalLightIntensity), unit: "%",        key: "light" },
+        { label: "Soil Humidity", value: fmt(plant?.optimalSoilHumidity),   unit: "%",        key: "soil"  },
+        { label: "Air Humidity",  value: fmt(plant?.optimalAirHumidity),    unit: "%",        key: "air"   },
+        { label: "Temperature",   value: fmt(plant?.optimalTemperature),    unit: scaleLabel, key: "temp"  },
     ];
 
     const leftMetrics  = metrics.slice(0, 2);
     const rightMetrics = metrics.slice(2, 4);
 
-    const soilReadings = plant?.sensorData ? [plant.sensorData.soilHumidity] : [];
+    const soilReadings = plant?.previousSensorData
+        ?.map(s => s.soilHumidity)
+        .filter((v): v is number => v != null) ?? [];
 
     const renderLineChart = () => {
         if (!soilReadings.length || soilReadings.every(v => v == null)) {
@@ -318,7 +323,6 @@ export function PlantInfo() {
                     </div>
                     <ThemeToggle/>
                     <button className={styles["logout-btn"]} onClick={handleLogout}>Logout</button>
-
                 </div>
             </div>
 
@@ -355,10 +359,10 @@ export function PlantInfo() {
                     <h3 className={styles["chart-title"]}>Latest sensor reading</h3>
                     <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
                         {[
-                            { label: "Temperature",   value: plant.sensorData.temperature,    unit: scaleLabel },
-                            { label: "Air Humidity",  value: plant.sensorData.airHumidity,    unit: "%" },
-                            { label: "Soil Humidity", value: plant.sensorData.soilHumidity,   unit: "%" },
-                            { label: "Light",         value: plant.sensorData.lightIntensity, unit: "%" },
+                            { label: "Temperature",   value: fmt(plant.sensorData.temperature),    unit: scaleLabel },
+                            { label: "Air Humidity",  value: fmt(plant.sensorData.airHumidity),    unit: "%" },
+                            { label: "Soil Humidity", value: fmt(plant.sensorData.soilHumidity),   unit: "%" },
+                            { label: "Light",         value: fmt(plant.sensorData.lightIntensity), unit: "%" },
                         ].map((s) => (
                             <div key={s.label} className={styles.box} style={{ minWidth: "140px" }}>
                                 <div className={styles["box-label"]}>{s.label}</div>
@@ -381,7 +385,7 @@ export function PlantInfo() {
                         </div>
                         <div className={styles.box} style={{ minWidth: "160px" }}>
                             <div className={styles["box-label"]}>Water level</div>
-                            <div className={styles["box-value"]}>{plant.watering.waterLevel != null ? `${plant.watering.waterLevel}%` : "—"}</div>
+                            <div className={styles["box-value"]}>{plant.watering.waterLevel != null ? `${fmt(plant.watering.waterLevel)}%` : "—"}</div>
                         </div>
                     </div>
                 </div>
