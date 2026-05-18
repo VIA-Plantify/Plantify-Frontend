@@ -225,6 +225,7 @@ export function PlantInfo() {
         }
     };
 
+
     const handleLogout = () => {
         Cookies.remove("user");
         navigate("/");
