@@ -40,7 +40,11 @@ export const updatePlant = async (mac: string, data: Partial<CreatePlantRequest>
         OptimalLightIntensity: data.optimalLightIntensity ?? 0,
     });
 };
-
+export const convertTemperature = async (mac: string, scale: number): Promise<void> => {
+    await api.put(`/Plant/temperature/${mac}`, null, {
+        params: { scale },
+    });
+};
 export const deletePlant = async (mac: string): Promise<void> => {
     await api.delete(`/Plant/${mac}`);
 };
