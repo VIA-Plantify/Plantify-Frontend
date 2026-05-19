@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import styles from "./Stylesheets/PlantInfo.module.css";
 import Cookies from "js-cookie";
-import { getPlant, getPlants, updatePlant } from "../api/Plants/plantApi";
+import { getPlant, getPlants, convertTemperature } from "../api/Plants/plantApi";
 import { getErrorMessage } from "../api/authApi";
 import type { Plant } from "../api/Plants/plantTypes";
 import plantImg from "../assets/PLANT.png";
@@ -211,22 +211,15 @@ export function PlantInfo() {
         if (!plant) return;
         try {
             const newScale = plant.scale === 0 ? 1 : 0;
-            await updatePlant(plant.mac, {
-                mac: plant.mac,
-                name: plant.name,
-                username: plant.username,
-                scale: newScale,
-                optimalTemperature: plant.optimalTemperature,
-                optimalAirHumidity: plant.optimalAirHumidity,
-                optimalSoilHumidity: plant.optimalSoilHumidity,
-                optimalLightIntensity: plant.optimalLightIntensity,
-            });
+            console.log(newScale);
+            await convertTemperature(plant.mac, newScale);
             await fetchPlant(plant.mac);
         } catch (err) {
             const { message } = getErrorMessage(err);
             setError(message);
         }
     };
+
 
     const handleLogout = () => {
         Cookies.remove("user");
@@ -301,8 +294,8 @@ export function PlantInfo() {
                     <button className={styles["add-btn"]} onClick={() => navigate("/AddPlant")}>
                         + Add Plant
                     </button>
-                    <button className={styles["add-btn"]} onClick={handleScaleToggle} disabled={!plant}>
-                        {plant?.scale === 0 ? "Switch to °F" : "Switch to °C"}
+                    <button className={styles["add-btn"]} onClick={handleScaleToggle}>
+                          {plant?.scale === 0 ? "Switch to °F" : "Switch to °C"}
                     </button>
                     <select
                         className={styles["dropdown"]}
