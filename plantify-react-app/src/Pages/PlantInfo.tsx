@@ -294,6 +294,9 @@ export function PlantInfo() {
                     <button className={styles["add-btn"]} onClick={() => navigate("/AddPlant")}>
                         + Add Plant
                     </button>
+                    <button className={styles["add-btn"]} onClick={() => navigate("/UpdatePlant")}>
+                        Update Plant
+                    </button>
                     <button className={styles["add-btn"]} onClick={handleScaleToggle}>
                           {plant?.scale === 0 ? "Switch to °F" : "Switch to °C"}
                     </button>
