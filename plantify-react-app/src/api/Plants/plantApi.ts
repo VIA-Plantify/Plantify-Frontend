@@ -45,6 +45,9 @@ export const convertTemperature = async (mac: string, scale: number): Promise<vo
         params: { scale },
     });
 };
+
+
+
 export const deletePlant = async (mac: string): Promise<void> => {
     await api.delete(`/Plant/${mac}`);
 };

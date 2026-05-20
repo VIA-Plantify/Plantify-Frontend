@@ -5,6 +5,9 @@ import Cookies from "js-cookie";
 import { getPlant, getPlants, convertTemperature } from "../api/Plants/plantApi";
 import { getErrorMessage } from "../api/authApi";
 import type { Plant } from "../api/Plants/plantTypes";
+import plant1 from "../assets/plant1.png";
+import plant2 from "../assets/plant2.png";
+import plant3 from "../assets/plant3.png";
 import plantImg from "../assets/PLANT.png";
 import { useTheme } from '../theme/ThemeContext';
 import { ThemeToggle } from '../theme/ThemeToggle';
@@ -393,6 +396,15 @@ export function PlantInfo() {
             </div>
 
             {error && <p className={styles["error-text"]}>{error}</p>}
+            <div className={styles["chart-section"]} style={{ marginTop: "20px" }}>
+                <div className={styles["image-row"]}>
+                    {[plant1, plant2, plant3].map((src, i) => (
+                        <div key={i} className={styles["image-box"]}>
+                            <img src={src} alt={`image-${i + 1}`} />
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
     );
 }
