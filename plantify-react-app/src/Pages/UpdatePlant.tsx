@@ -6,6 +6,8 @@ import { getErrorMessage } from "../api/authApi";
 import styles from "./Stylesheets/AddPlant.module.css";
 import plantImg from "../assets/plant.placeholder.png";
 import type { Plant } from "../api/Plants/plantTypes";
+import { useTheme } from '../theme/ThemeContext';
+import { ThemeToggle } from '../theme/ThemeToggle';
 
 export function UpdatePlant() {
     const navigate = useNavigate();
@@ -14,6 +16,7 @@ export function UpdatePlant() {
     const user = userStr ? JSON.parse(decodeURIComponent(userStr)) : null;
     const displayName = user?.name || user?.username || "User";
     const username = user?.username || "unknown";
+    const { theme } = useTheme();
 
     const [allPlants, setAllPlants] = useState<Plant[]>([]);
     const [selectedMac, setSelectedMac] = useState<string>("");
@@ -156,7 +159,7 @@ export function UpdatePlant() {
     if (isFetching) return <div style={{ padding: 40, textAlign: "center" }}>Loading...</div>;
 
     return (
-        <div className={styles["plant-info-container"]}>
+        <div className={`${styles["plant-info-container"]} ${theme === 'dark' ? styles.dark : ''}`}>
 
 
             <div className={styles["top-bar"]}>
@@ -170,6 +173,7 @@ export function UpdatePlant() {
                         <span className={styles["user-name"]}>{displayName}</span>
                         <span className={styles["user-username"]}>@{username}</span>
                     </div>
+                    <ThemeToggle/>
                     <button className={styles["logout-btn"]} onClick={handleLogout}>
                         Logout
                     </button>
