@@ -1,14 +1,28 @@
+@font-face {
+    font-family: "TBJ-45-extra Bold Sans Family Md";
+    src: url("https://db.onlinewebfonts.com/t/79616ad79ad0d50f25eb276589773acd.eot");
+    src: url("https://db.onlinewebfonts.com/t/79616ad79ad0d50f25eb276589773acd.eot?#iefix")format("embedded-opentype"),
+    url("https://db.onlinewebfonts.com/t/79616ad79ad0d50f25eb276589773acd.woff2")format("woff2"),
+    url("https://db.onlinewebfonts.com/t/79616ad79ad0d50f25eb276589773acd.woff")format("woff"),
+    url("https://db.onlinewebfonts.com/t/79616ad79ad0d50f25eb276589773acd.ttf")format("truetype"),
+    url("https://db.onlinewebfonts.com/t/79616ad79ad0d50f25eb276589773acd.svg#TBJ-45-extra Bold Sans Family Md")format("svg");
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: "TBJ-45-extra Bold Sans Family Md", arial;
 }
 
 body {
-    background-color: white;
     margin: 0;
     padding: 0;
     font-weight: bold;
+}
+
+.dark .body, .dark.body {
+    background-color: #1a1a1a;
 }
 
 .login-container {
@@ -18,7 +32,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: white;
 }
 
 .login-canvas {
@@ -142,6 +155,10 @@ a, a:visited, a:hover, a:active, a:focus {
     text-align: center;
 }
 
+.dark .color, .color.dark {
+    color: #ffffff;
+}
+
 .error-text {
     color: #ff0000;
     background-color: rgba(255, 0, 0, 0.1);
@@ -165,6 +182,10 @@ a, a:visited, a:hover, a:active, a:focus {
     text-align: center;
 }
 
+.dark .user-info-panel, .dark .user-info-panel {
+    background-color: #1a1a1a;
+}
+
 .user-details {
     text-align: left;
     margin: 15px 0;
@@ -176,6 +197,41 @@ a, a:visited, a:hover, a:active, a:focus {
 .user-details p {
     margin: 8px 0;
     word-break: break-all;
+}
+
+.wrapper {
+    position: relative;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    color: #11ae5e;
+    font-weight: bold;
+}
+
+.password-toggle {
+    position: absolute;
+    right: -175px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 0;
+    line-height: 1;
+    color: #11ae5e;
+    font-weight: bold;
+}
+
+.icon {
+    position: absolute;
+    left: 20px;
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
+    opacity: 0.75;
+}
+
+.button {
+    padding-left: 38px;
 }
 
 @media (max-width: 600px) {

@@ -5,10 +5,13 @@
 }
 
 body {
-    background-color: white;
     margin: 0;
     padding: 0;
     font-weight: bold;
+}
+
+.dark .body, .dark.body {
+    background-color: #1a1a1a;
 }
 
 .register-container {
@@ -18,7 +21,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: white;
 }
 
 .register-canvas {
@@ -142,6 +144,10 @@ a, a:visited, a:hover, a:active, a:focus {
     text-align: center;
 }
 
+.dark .color, .dark.color{
+    color: white;
+}
+
 .error-text {
     color: #ff0000;
     background-color: rgba(255, 0, 0, 0.1);
@@ -169,6 +175,41 @@ a, a:visited, a:hover, a:active, a:focus {
 
 .password-validation .invalid {
     color: #ff4444;
+}
+
+.wrapper {
+    position: relative;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    color: #11ae5e;
+    font-weight: bold;
+}
+
+.password-toggle {
+    position: absolute;
+    right: -175px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 0;
+    line-height: 1;
+    color: #11ae5e;
+    font-weight: bold;
+}
+
+.icon {
+    position: absolute;
+    left: 20px;
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
+    opacity: 0.75;
+}
+
+.button {
+    padding-left: 38px;
 }
 
 @media (max-width: 600px) {

@@ -1,9 +1,13 @@
 import {useEffect, useRef, useState} from 'react';
 import { Link, useNavigate } from "react-router-dom"
 import logo from '../assets/plantifylogotransp.png'
-import styles from "./Stylesheets/Login.module.css";
 import Cookies from 'js-cookie';
 import {getErrorMessage, login} from "../api/authApi";
+import userIcon from "../assets/icons/user.png";
+import passwordIcon from "../assets/icons/password.png";
+import styles from "./Stylesheets/Login.module.css";
+import { useTheme } from '../theme/ThemeContext';
+import { ThemeToggle } from '../theme/ThemeToggle';
 
 export function Login() {
     const navigate = useNavigate();
@@ -11,12 +15,14 @@ export function Login() {
         token: Cookies.get('token'),
         user: Cookies.get('user')
     });
+    const { theme } = useTheme();
     const [emailOrUsername, setEmailOrUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [userData, setUserData] = useState<{username: string; email: string} | null>(null);
+    const [userData, setUserData] = useState<{username: string; email: string; name: string} | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const [showPassword, setShowPassword] = useState(false);
 
     const clearFields = () => {
         setEmailOrUsername("");
@@ -156,20 +162,21 @@ export function Login() {
             cancelAnimationFrame(animationId);
         };
 
-    }, []);
+    }, [theme]);
     const handleLogin = async () => {
-    setError(null);
-    setIsLoading(true);
+        setError(null);
+        setIsLoading(true);
         try {
             const isEmail=emailOrUsername.includes("@")
             const response = await login({
                 email: isEmail ? emailOrUsername : "",
-            username : !isEmail ? emailOrUsername: "",
-            password});
+                username : !isEmail ? emailOrUsername: "",
+                password});
 
             const userInfo = {
                 username: response.data.username || emailOrUsername,
-                email: response.data.email || emailOrUsername
+                email: response.data.email || emailOrUsername,
+                name: response.data.name,
             };
 
             Cookies.set('user', JSON.stringify(userInfo), {
@@ -197,42 +204,75 @@ export function Login() {
     }
 
     return (
-        <div className={styles["login-container"]} >
+        <div className={`${styles["login-container"]} ${theme === 'dark' ? styles.dark : ''}`}>
             <canvas
                 ref={canvasRef} className={styles["login-canvas"]}
-                />
+            />
             <div className={styles["login-content"]}>
-            <img className={styles.logo} src={logo} alt="Logo"></img>
-            <div className={styles["form-container"]}>
-                {!userData && (
-                <>
+                <img className={styles.logo} src={logo} alt="Logo"></img>
+                <div className={styles["form-container"]}>
+                    {!userData && (
+                        <>
+                            <div className={styles["wrapper"]}>
+                                <img
+                                    src={userIcon}
+                                    alt="user icon"
+                                    className={styles["icon"]}
+                                />
+                                <input
+                                    className={styles.button}
+                                    type="text"
+                                    placeholder="Email or Username"
+                                    value={emailOrUsername}
+                                    onChange={(e) => setEmailOrUsername(e.target.value) }
+                                    onKeyDown={(e) => { if (e.key === 'Enter') handleLogin(); }}
+                                />
+                            </div>
 
-                    <input className={styles.button} type="text" placeholder="Email or Username" value={emailOrUsername} onChange={(e) => setEmailOrUsername(e.target.value) } />
-                    <input className={styles.button} type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                    {error && (
-                        <div className={styles["error-text"]}>
-                            {error}
+                            <div className={styles["wrapper"]}>
+                                <img
+                                    src={passwordIcon}
+                                    alt="password icon"
+                                    className={styles["icon"]}
+                                />
+                                <input
+                                    className={styles.button}
+                                    type={showPassword ? "text" : "password"}
+                                    placeholder="Password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    onKeyDown={(e) => { if (e.key === 'Enter') handleLogin(); }}
+                                />
+                                <button
+                                    type="button"
+                                    className={styles["password-toggle"]}
+                                    onClick={() => setShowPassword(prev => !prev)}
+                                >
+                                    {showPassword ? "Hide Password" : "Show Password"}
+                                </button>
+                            </div>
+                            {error && (
+                                <div className={styles["error-text"]}>
+                                    {error}
+                                </div>
+                            )}
+                            <Link className={styles.link} to="/Register">Forgot password?</Link>
+                            <button className={styles.button2} type="submit" onClick={() => {handleLogin();}} disabled={isLoading}> {isLoading ? "Connecting in..." : "Connect" }
+                            </button>
+                            <p className={styles.color}>Don't have an account yet? <Link className={styles.link} to="/Register">Sign up</Link></p>
+                            <p><Link className={styles.link} to="/PlantInfo">Back up for now</Link></p>
+                            <ThemeToggle/>
+                        </>
+                    )}
+
+                    {userData && (
+                        <div>
+                            <button className={styles.button2} onClick={handleLogout}>Logout</button>
+                            <p><Link className={styles.link} to="/PlantInfo">Back up for now</Link></p>
                         </div>
                     )}
-                    <Link className={styles.link} to="/Register">Forgot password?</Link>
-                    <button className={styles.button2} type="submit" onClick={() => {handleLogin();}} disabled={isLoading}> {isLoading ? "Connecting in..." : "Connect" }
-                        </button>
-                    <p className={styles.color}>Don't have an account yet? <Link className={styles.link} to="/Register">Sign up</Link></p>
-                    <p><Link className={styles.link} to="/PlantInfo">Back up for now</Link></p>
-                </>
-                    )}
-
-                {userData && (
-                    <div className={styles["user-info-panel"]}>
-                        <h3>Welcome, {userData.username}!</h3>
-                        <p><strong>Username:</strong> {userData.username}</p>
-                        <p><strong>Email:</strong> {userData.email}</p>
-                        <button className={styles.button2} onClick={handleLogout}>Logout</button>
-                        <p><Link className={styles.link} to="/PlantInfo">Back up for now</Link></p>
-                    </div>
-                )}
+                </div>
             </div>
-        </div>
         </div>
     );
 }

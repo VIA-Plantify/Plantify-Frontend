@@ -9,7 +9,8 @@ export const login = async (data: LoginRequest): Promise<{ data: AuthUser }> => 
     const response = await api.post<string>("/Auth/login", {
         email: data.email,
         username: data.username,
-        password: data.password
+        password: data.password,
+        name: data.name
     });
 
     const token = response.data;
@@ -24,7 +25,8 @@ export const login = async (data: LoginRequest): Promise<{ data: AuthUser }> => 
     return {
         data: {
             username: payload.Username,
-            email: payload.Email
+            email: payload.Email,
+            name: payload.Name
         }
     };
 };
