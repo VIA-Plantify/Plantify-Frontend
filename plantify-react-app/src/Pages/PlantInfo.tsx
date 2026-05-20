@@ -184,6 +184,8 @@ export function PlantInfo() {
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [selectedMac, setSelectedMac] = useState<string>("");
+    const [chartLimit, setChartLimit] = useState<number>(10);
+    const [chartLimitInput, setChartLimitInput] = useState<string>("10");
 
     useEffect(() => { fetchAllPlants(); }, []);
     useEffect(() => { if (selectedMac) fetchPlant(selectedMac); }, [selectedMac]);
@@ -221,6 +223,7 @@ export function PlantInfo() {
             setPumpTime(null);
         }
     };
+
     const handleScaleToggle = async () => {
         if (!plant) return;
         try {
@@ -233,7 +236,6 @@ export function PlantInfo() {
             setError(message);
         }
     };
-
 
     const handleLogout = () => {
         Cookies.remove("user");
@@ -248,7 +250,6 @@ export function PlantInfo() {
         { label: "Soil Humidity", value: fmt(plant?.optimalSoilHumidity),   unit: "%",        key: "soil"  },
         { label: "Air Humidity",  value: fmt(plant?.optimalAirHumidity),    unit: "%",        key: "air"   },
         { label: "Temperature",   value: fmt(plant?.optimalTemperature),    unit: scaleLabel, key: "temp"  },
-
     ];
 
     const leftMetrics  = metrics.slice(0, 2);
@@ -256,47 +257,81 @@ export function PlantInfo() {
 
     const soilReadings = plant?.previousSensorData
         ?.map(s => s.soilHumidity)
-        .filter((v): v is number => v != null) ?? [];
+        .filter((v): v is number => v != null)
+        .slice(-chartLimit) ?? [];
 
     const renderLineChart = () => {
         if (!soilReadings.length || soilReadings.every(v => v == null)) {
             return <p className={styles["no-data"]}>No soil humidity data available</p>;
         }
+
         const data = soilReadings.filter((v): v is number => v != null);
         const width = 800, height = 300, padding = 40;
         const chartWidth  = width  - 2 * padding;
         const chartHeight = height - 2 * padding;
-        const xStep  = data.length > 1 ? chartWidth / (data.length - 1) : 0;
+
+        // Dynamic Y axis: min-10 and max+10, clamped to [0, 100]
+        const rawMin = Math.min(...data);
+        const rawMax = Math.max(...data);
+        const yMin = Math.max(0,   rawMin - 10);
+        const yMax = Math.min(100, rawMax + 10);
+        const yRange = yMax - yMin || 1;
+
+        const xStep = data.length > 1 ? chartWidth / (data.length - 1) : 0;
+
+        // Convert a data value to SVG Y coordinate
+        const toY = (value: number) =>
+            padding + chartHeight - ((value - yMin) / yRange) * chartHeight;
+
         const points = data.map((value, index) => {
             const x = padding + index * xStep;
-            const y = padding + chartHeight - (value / 100) * chartHeight;
-            return `${x},${y}`;
+            return `${x},${toY(value)}`;
         }).join(" ");
 
-        const bgColor = theme === 'dark' ? '#1a1a1a' : '#f9f9f9';
-        const gridColor = theme === 'dark' ? '#333' : '#ddd';
-        const labelColor = theme === 'dark' ? '#aaa' : '#888';
+        const bgColor    = theme === 'dark' ? '#1a1a1a' : '#f9f9f9';
+        const gridColor  = theme === 'dark' ? '#333'    : '#ddd';
+        const labelColor = theme === 'dark' ? '#aaa'    : '#888';
+
+        // Generate 6 evenly spaced grid lines between yMin and yMax
+        const gridSteps = 5;
+        const stepSize  = (yMax - yMin) / gridSteps;
+        const gridLevels = Array.from({ length: gridSteps + 1 }, (_, i) =>
+            Math.round((yMin + i * stepSize) * 10) / 10
+        );
 
         return (
-            <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="xMidYMid meet" className={styles["graph"]}>
+            <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`}
+                 preserveAspectRatio="xMidYMid meet" className={styles["graph"]}>
                 <rect width={width} height={height} fill={bgColor} rx="10" />
-                {[0, 25, 50, 75, 100].map((level) => {
-                    const y = padding + chartHeight - (level / 100) * chartHeight;
+
+                {gridLevels.map((level) => {
+                    const y = toY(level);
                     return (
                         <g key={level}>
-                            <line x1={padding} y1={y} x2={width - padding} y2={y} stroke={gridColor} strokeWidth="1" strokeDasharray="4" />
-                            <text x={padding - 8} y={y + 4} fontSize="11" fill={labelColor} textAnchor="end">{level}%</text>
+                            <line x1={padding} y1={y} x2={width - padding} y2={y}
+                                  stroke={gridColor} strokeWidth="1" strokeDasharray="4" />
+                            <text x={padding - 8} y={y + 4} fontSize="11"
+                                  fill={labelColor} textAnchor="end">{level}%</text>
                         </g>
                     );
                 })}
-                <polyline points={points} fill="none" stroke="#11ae5e" strokeWidth="3" strokeLinejoin="round" strokeLinecap="round" />
+
+                <polyline points={points} fill="none" stroke="#11ae5e"
+                          strokeWidth="3" strokeLinejoin="round" strokeLinecap="round" />
+
                 {data.map((value, index) => {
                     const x = padding + index * xStep;
-                    const y = padding + chartHeight - (value / 100) * chartHeight;
-                    return <circle key={index} cx={x} cy={y} r="4" fill="#11ae5e" stroke="white" strokeWidth="2" />;
+                    return (
+                        <circle key={index} cx={x} cy={toY(value)}
+                                r="4" fill="#11ae5e" stroke="white" strokeWidth="2" />
+                    );
                 })}
-                <text x={width / 2} y={height - 8} fontSize="12" fill="#11ae5e" textAnchor="middle" fontWeight="bold">Reading Number</text>
-                <text x={15} y={height / 2} fontSize="12" fill="#11ae5e" textAnchor="middle" fontWeight="bold" transform={`rotate(-90, 1, ${height / 2})`}>Humidity (%)</text>
+
+                <text x={width / 2} y={height - 8} fontSize="12" fill="#11ae5e"
+                      textAnchor="middle" fontWeight="bold">Reading Number</text>
+                <text x={15} y={height / 2} fontSize="12" fill="#11ae5e"
+                      textAnchor="middle" fontWeight="bold"
+                      transform={`rotate(-90, 1, ${height / 2})`}>Humidity (%)</text>
             </svg>
         );
     };
@@ -316,7 +351,7 @@ export function PlantInfo() {
                         Update Plant
                     </button>
                     <button className={styles["add-btn"]} onClick={handleScaleToggle}>
-                          {plant?.scale === 0 ? "Switch to °F" : "Switch to °C"}
+                        {plant?.scale === 0 ? "Switch to °F" : "Switch to °C"}
                     </button>
                     <select
                         className={styles["dropdown"]}
@@ -408,6 +443,32 @@ export function PlantInfo() {
 
             <div className={styles["chart-section"]}>
                 <h3 className={styles["chart-title"]}>Soil Humidity History</h3>
+                <div className={styles["chart-limit-row"]}>
+                    <label className={styles["chart-limit-label"]}>Number of readings:</label>
+                    <input
+                        type="number"
+                        min="1"
+                        max="500"
+                        value={chartLimitInput}
+                        onChange={(e) => setChartLimitInput(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                const parsed = parseInt(chartLimitInput, 10);
+                                if (!isNaN(parsed) && parsed > 0) setChartLimit(parsed);
+                            }
+                        }}
+                        className={styles["chart-limit-input"]}
+                    />
+                    <button
+                        onClick={() => {
+                            const parsed = parseInt(chartLimitInput, 10);
+                            if (!isNaN(parsed) && parsed > 0) setChartLimit(parsed);
+                        }}
+                        className={styles["chart-limit-btn"]}
+                    >
+                        Apply
+                    </button>
+                </div>
                 {isLoading ? <p>Loading chart...</p> : renderLineChart()}
             </div>
 
