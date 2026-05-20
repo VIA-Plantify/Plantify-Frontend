@@ -85,7 +85,7 @@ export function UpdatePlant() {
                 return;
             }
             const num = parseFloat(value);
-            const clamped = Math.min(100, Math.max(0, num));
+            const clamped = Math.min(1024, Math.max(0, num));
             setForm((prev) => ({ ...prev, [name]: String(clamped) }));
         } else {
             setForm((prev) => ({ ...prev, [name]: value }));
@@ -127,7 +127,7 @@ export function UpdatePlant() {
         { label: "Temperature", name: "optimalTemperature", unit: "°C", placeholder: "0–100" },
         { label: "Soil Humidity", name: "optimalSoilHumidity", unit: "%", placeholder: "0–100" },
         { label: "Air Humidity", name: "optimalAirHumidity", unit: "%", placeholder: "0–100" },
-        { label: "Light Intensity", name: "optimalLightIntensity", unit: "", placeholder: "0–100" },
+        { label: "Light Intensity", name: "optimalLightIntensity", unit: "", placeholder: "0–1024" },
     ];
 
     const leftFields = fields.slice(0, 2);
@@ -151,7 +151,7 @@ export function UpdatePlant() {
                 onChange={handleChange}
                 placeholder={field.placeholder}
                 min={0}
-                max={100}
+                max={1024}
             />
         </div>
     );
