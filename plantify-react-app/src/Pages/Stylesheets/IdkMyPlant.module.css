@@ -528,3 +528,231 @@
         padding: 14px 24px;
     }
 }
+
+/* ── Two-col row (MAC + Name) ── */
+.twoCol {
+    display: flex;
+    gap: 20px;
+}
+
+.fieldGroup {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.fieldLabel {
+    font-size: 13px;
+    font-weight: bold;
+    color: #11ae5e;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.fieldInput {
+    border: 2px solid #11ae5e;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 15px;
+    font-weight: bold;
+    outline: none;
+    background: white;
+    color: #2d7a4f;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.dark .fieldInput {
+    background: #1a1a1a;
+    color: #a8d878;
+}
+
+/* ── Optimal values grid ── */
+.cardHint {
+    font-size: 13px;
+    color: #888;
+    font-weight: normal;
+    margin-top: -4px;
+}
+
+.optimalGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.optimalBox {
+    background: #f5fdf9;
+    border: 2px solid #11ae5e;
+    border-radius: 16px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    text-align: center;
+}
+
+.dark .optimalBox {
+    background: #0d1f14;
+}
+
+.optimalLabel {
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #888;
+}
+
+.optimalValue {
+    font-size: 26px;
+    font-weight: bold;
+    color: #11ae5e;
+    line-height: 1;
+}
+
+.optimalUnit {
+    font-size: 14px;
+    font-weight: normal;
+    color: #888;
+}
+
+/* ── Waiting / diagnosis / done screens ── */
+.waitingWrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    width: 100%;
+}
+
+.waitingCard {
+    background: white;
+    border: 3px solid #11ae5e;
+    border-radius: 24px;
+    padding: 40px 36px;
+    max-width: 480px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 10px 30px rgba(17, 174, 94, 0.15);
+    text-align: center;
+}
+
+.dark .waitingCard {
+    background: #1a1a1a;
+}
+
+.waitingEmoji {
+    font-size: 56px;
+    line-height: 1;
+}
+
+.waitingTitle {
+    font-size: 24px;
+    font-weight: bold;
+    color: #11ae5e;
+}
+
+.waitingSubtitle {
+    font-size: 15px;
+    color: #555;
+    font-weight: normal;
+    line-height: 1.5;
+}
+
+.dark .waitingSubtitle {
+    color: #aaa;
+}
+
+.waitingHint {
+    font-size: 13px;
+    color: #888;
+    font-weight: normal;
+}
+
+/* Progress bar */
+.progressBar {
+    width: 100%;
+    height: 10px;
+    background: #d4f5e6;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.progressFill {
+    height: 100%;
+    background: #11ae5e;
+    border-radius: 999px;
+    transition: width 0.5s ease;
+}
+
+.progressText {
+    font-size: 15px;
+    font-weight: bold;
+    color: #11ae5e;
+}
+
+/* Loading bar (animated) */
+.loadingBar {
+    width: 100%;
+    height: 8px;
+    background: #d4f5e6;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.loadingBarFill {
+    height: 100%;
+    background: #11ae5e;
+    border-radius: 999px;
+    animation: loadingSlide 1.4s ease-in-out infinite;
+    width: 40%;
+}
+
+@keyframes loadingSlide {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(350%); }
+}
+
+/* Confidence row */
+.confidenceRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.resultSpecies {
+    font-size: 22px;
+    font-weight: bold;
+    color: #11ae5e;
+}
+
+/* Secondary button */
+.secondaryBtn {
+    background: none;
+    border: 2px solid #11ae5e;
+    color: #11ae5e;
+    padding: 12px 32px;
+    border-radius: 50px;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.secondaryBtn:hover {
+    background: #e6f9f0;
+}
+
+@media (max-width: 600px) {
+    .twoCol { flex-direction: column; }
+    .optimalGrid { grid-template-columns: 1fr; }
+}
