@@ -1,26 +1,26 @@
-name: Build and push image
-
+name: Build and push image ReactApp
 on:
   push:
     branches: [main]
   workflow_dispatch: 
-
 permissions:
   contents: read
   packages: write
-
 jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
+      - name: Get short SHA
+        id: sha
+        run: echo "short=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+        
       - uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
+          
       - name: Build and push frontend
         uses: docker/build-push-action@v6
         with:
@@ -28,8 +28,8 @@ jobs:
           file: ./plantify-react-app/Dockerfile
           push: true
           tags: |
-               ghcr.io/via-plantify/plantify-frontend/reactapp:latest
-               ghcr.io/via-plantify/plantify-frontend/reactapp:${{ github.sha }}
+            ghcr.io/via-plantify/plantify-frontend/reactapp:latest
+            ghcr.io/via-plantify/plantify-frontend/reactapp:${{ steps.sha.outputs.short }}
           build-args: |
-               VITE_API_URL=${{ secrets.VITE_API_URL }}
-
+            VITE_API_URL=${{ secrets.VITE_API_URL }}
+            VITE_AZURE_API_FOR_ML=${{ secrets.VITE_AZURE_API_FOR_ML }}
