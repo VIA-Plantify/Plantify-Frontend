@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import Cookies from "js-cookie";
 import { createPlant } from "../api/Plants/plantApi";
 import { getErrorMessage } from "../api/authApi";
@@ -7,6 +7,7 @@ import styles from "./Stylesheets/AddPlant.module.css";
 import plantImg from "../assets/plant.placeholder.png";
 import { useTheme } from '../theme/ThemeContext';
 import { ThemeToggle } from '../theme/ThemeToggle';
+
 
 interface PlantPreset {
     emoji: string;
@@ -273,8 +274,8 @@ export function AddPlant() {
                         name="mac"
                         value={form.mac}
                         onChange={handleMacChange}
-                        placeholder="AA:BB:CC:DD:EE:FF"
-                        maxLength={17}
+                        placeholder="AA:BB:CC:DD:EE"
+                        maxLength={14}
                     />
                 </div>
                 <div className={styles["header-field"]}>
@@ -310,6 +311,7 @@ export function AddPlant() {
                     {isLoading ? "Adding..." : "Add Plant"}
                 </button>
             </div>
+            <p><Link className={styles.link} to="/IdkMyPlant">I dont know my plant optimal values</Link></p>
         </div>
     );
 }
