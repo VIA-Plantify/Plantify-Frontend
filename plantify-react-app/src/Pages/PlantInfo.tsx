@@ -3,11 +3,12 @@ import { useNavigate } from "react-router-dom";
 import styles from "./Stylesheets/PlantInfo.module.css";
 import Cookies from "js-cookie";
 import { getPlant, getPlants, convertTemperature } from "../api/Plants/plantApi";
+import { getPumpTime } from "../api/Plants/MalPlant";
 import { getErrorMessage } from "../api/authApi";
 import type { Plant } from "../api/Plants/plantTypes";
-import plant1 from "../assets/plant1.png";
-import plant2 from "../assets/plant2.png";
-import plant3 from "../assets/plant3.png";
+//import plant1 from "../assets/plant1.png";
+//import plant2 from "../assets/plant2.png";
+//import plant3 from "../assets/plant3.png";
 import plantImg from "../assets/PLANT.png";
 import { useTheme } from '../theme/ThemeContext';
 import { ThemeToggle } from '../theme/ThemeToggle';
@@ -177,6 +178,7 @@ export function PlantInfo() {
     const username = user?.username || "unknown";
     const { theme } = useTheme();
 
+    const [pumpTime, setPumpTime] = useState<number | null>(null);
     const [plant, setPlant] = useState<Plant | null>(null);
     const [allPlants, setAllPlants] = useState<Plant[]>([]);
     const [error, setError] = useState<string | null>(null);
@@ -202,6 +204,7 @@ export function PlantInfo() {
         try {
             const data = await getPlant(mac, 50, 5);
             setPlant(data ?? null);
+            if (data && username) await fetchPumpTime(username, mac);
         } catch (err) {
             const { message } = getErrorMessage(err);
             setError(message);
@@ -210,6 +213,14 @@ export function PlantInfo() {
         }
     };
 
+    const fetchPumpTime = async (username: string, mac: string) => {
+        try {
+            const time = await getPumpTime(username, mac);
+            setPumpTime(time);
+        } catch {
+            setPumpTime(null);
+        }
+    };
     const handleScaleToggle = async () => {
         if (!plant) return;
         try {
@@ -237,6 +248,7 @@ export function PlantInfo() {
         { label: "Soil Humidity", value: fmt(plant?.optimalSoilHumidity),   unit: "%",        key: "soil"  },
         { label: "Air Humidity",  value: fmt(plant?.optimalAirHumidity),    unit: "%",        key: "air"   },
         { label: "Temperature",   value: fmt(plant?.optimalTemperature),    unit: scaleLabel, key: "temp"  },
+
     ];
 
     const leftMetrics  = metrics.slice(0, 2);
@@ -362,6 +374,7 @@ export function PlantInfo() {
                             { label: "Air Humidity",  value: fmt(plant.sensorData.airHumidity),    unit: "%" },
                             { label: "Soil Humidity", value: fmt(plant.sensorData.soilHumidity),   unit: "%" },
                             { label: "Light",         value: fmt(plant.sensorData.lightIntensity), unit: "%" },
+                            { label: "Pump Time",     value: pumpTime != null ? String(pumpTime) : null, unit: "s" },
                         ].map((s) => (
                             <div key={s.label} className={styles.box} style={{ minWidth: "140px" }}>
                                 <div className={styles["box-label"]}>{s.label}</div>
@@ -396,15 +409,7 @@ export function PlantInfo() {
             </div>
 
             {error && <p className={styles["error-text"]}>{error}</p>}
-            <div className={styles["chart-section"]} style={{ marginTop: "20px" }}>
-                <div className={styles["image-row"]}>
-                    {[plant1, plant2, plant3].map((src, i) => (
-                        <div key={i} className={styles["image-box"]}>
-                            <img src={src} alt={`image-${i + 1}`} />
-                        </div>
-                    ))}
-                </div>
-            </div>
+
         </div>
     );
 }
