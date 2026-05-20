@@ -4,7 +4,6 @@
     box-sizing: border-box;
 }
 
-/* ── Container ── */
 .container {
     padding-top: 90px;
     width: 100%;
@@ -20,7 +19,6 @@
     background: #1a1a1a;
 }
 
-/* ── Top Bar ── */
 .topBar {
     position: fixed;
     top: 0;
@@ -107,7 +105,6 @@
     color: white;
 }
 
-/* ── Page Header ── */
 .pageHeader {
     padding: 28px 40px 8px;
     text-align: center;
@@ -126,7 +123,6 @@
     font-weight: normal;
 }
 
-/* ── Layout ── */
 .content {
     display: flex;
     gap: 40px;
@@ -145,7 +141,6 @@
     max-width: 620px;
 }
 
-/* ── Cards ── */
 .card {
     background-color: white;
     border: 3px solid #11ae5e;
@@ -189,7 +184,7 @@
 
 .badge {
     font-size: 11px;
-    background: #e6f9f0;
+    background: #d9ffec;
     color: #11ae5e;
     border-radius: 999px;
     padding: 2px 10px;
@@ -199,7 +194,10 @@
     border: 1.5px solid #11ae5e;
 }
 
-/* ── Slider ── */
+.dark .badge {
+    background: #0d1f14;
+}
+
 .sliderRow {
     display: flex;
     align-items: center;
@@ -212,22 +210,26 @@
     appearance: none;
     height: 5px;
     border-radius: 999px;
-    background: #d4f5e6;
-    outline: none;
+    background: white;
+    border: 1.5px solid #11ae5e;
     cursor: pointer;
 }
 
-.slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 22px;
-    height: 22px;
+.dark .slider {
+    background: #1a1a1a;
+}
+
+.slider::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
     border-radius: 50%;
-    background: #11ae5e;
+    background: #d9ffec;
     cursor: pointer;
-    border: 3px solid white;
-    box-shadow: 0 2px 8px rgba(17, 174, 94, 0.4);
-    transition: transform 0.15s;
+    border: 3px solid #11ae5e;
+}
+
+.dark .slider::-moz-range-thumb {
+    background: #0d1f14;
 }
 
 .slider::-webkit-slider-thumb:hover {
@@ -251,7 +253,6 @@
     margin-top: 2px;
 }
 
-/* ── Chip Grid (growth / frequency) ── */
 .chipGrid {
     display: flex;
     gap: 8px;
@@ -267,14 +268,22 @@
     font-size: 14px;
     text-align: center;
     cursor: pointer;
-    background: transparent;
+    background: #d9ffec;
     color: #11ae5e;
     font-weight: bold;
     transition: all 0.2s ease;
 }
 
+.dark .chip {
+    background: #0d1f14;
+}
+
 .chip:hover {
     background: #e6f9f0;
+}
+
+.dark .chip:hover {
+    background: #173b25;
 }
 
 .chipActive {
@@ -283,11 +292,15 @@
     box-shadow: 0 4px 12px rgba(17, 174, 94, 0.3);
 }
 
-/* ── Soil Buttons ── */
+.dark .chipActive {
+    background: #11ae5e;
+}
+
 .soilGrid {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+
 }
 
 .soilBtn {
@@ -296,14 +309,22 @@
     padding: 10px 20px;
     font-size: 14px;
     cursor: pointer;
-    background: transparent;
+    background: #d9ffec;
     color: #11ae5e;
     font-weight: bold;
     transition: all 0.2s ease;
 }
 
+.dark .soilBtn {
+    background: #0d1f14;
+}
+
 .soilBtn:hover {
     background: #e6f9f0;
+}
+
+.dark .soilBtn:hover {
+    background: #173b25;
 }
 
 .soilBtnActive {
@@ -312,7 +333,10 @@
     box-shadow: 0 4px 12px rgba(17, 174, 94, 0.3);
 }
 
-/* ── Error ── */
+.dark .soilBtnActive {
+    background: #11ae5e;
+}
+
 .errorText {
     font-size: 14px;
     color: #ff4d4d;
@@ -323,7 +347,6 @@
     font-weight: normal;
 }
 
-/* ── Identify Button ── */
 .identifyBtn {
     width: 100%;
     padding: 16px 60px;
@@ -349,7 +372,6 @@
     cursor: not-allowed;
 }
 
-/* Loading dots */
 .loadingDots span {
     animation: blink 1.2s infinite;
 }
@@ -361,7 +383,6 @@
     40% { opacity: 1; }
 }
 
-/* ── Result Panel ── */
 .resultPanel {
     width: 320px;
     flex-shrink: 0;
@@ -497,7 +518,6 @@
     box-shadow: 0 6px 20px rgba(17, 174, 94, 0.35);
 }
 
-/* ── Responsive ── */
 @media (max-width: 900px) {
     .content {
         flex-direction: column;
@@ -529,7 +549,6 @@
     }
 }
 
-/* ── Two-col row (MAC + Name) ── */
 .twoCol {
     display: flex;
     gap: 20px;
@@ -557,18 +576,17 @@
     font-size: 15px;
     font-weight: bold;
     outline: none;
-    background: white;
+    background: #d9ffec;
     color: #2d7a4f;
     transition: all 0.2s ease;
     width: 100%;
 }
 
 .dark .fieldInput {
-    background: #1a1a1a;
+    background: #0d1f14;
     color: #a8d878;
 }
 
-/* ── Optimal values grid ── */
 .cardHint {
     font-size: 13px;
     color: #888;
@@ -583,7 +601,7 @@
 }
 
 .optimalBox {
-    background: #f5fdf9;
+    background: #d9ffec;
     border: 2px solid #11ae5e;
     border-radius: 16px;
     padding: 14px;
@@ -619,7 +637,6 @@
     color: #888;
 }
 
-/* ── Waiting / diagnosis / done screens ── */
 .waitingWrapper {
     flex: 1;
     display: flex;
@@ -676,7 +693,6 @@
     font-weight: normal;
 }
 
-/* Progress bar */
 .progressBar {
     width: 100%;
     height: 10px;
@@ -698,7 +714,6 @@
     color: #11ae5e;
 }
 
-/* Loading bar (animated) */
 .loadingBar {
     width: 100%;
     height: 8px;
@@ -720,7 +735,6 @@
     100% { transform: translateX(350%); }
 }
 
-/* Confidence row */
 .confidenceRow {
     display: flex;
     align-items: center;
@@ -734,7 +748,6 @@
     color: #11ae5e;
 }
 
-/* Secondary button */
 .secondaryBtn {
     background: none;
     border: 2px solid #11ae5e;

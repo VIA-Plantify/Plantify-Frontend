@@ -123,6 +123,7 @@ export function AddPlant() {
             const num = parseFloat(value);
             const max = fieldLimits[name] ?? 100;
             const clamped = Math.min(max, Math.max(0, num));
+
             setForm((prev) => ({ ...prev, [name]: String(clamped) }));
         } else {
             setForm((prev) => ({ ...prev, [name]: value }));
@@ -185,6 +186,7 @@ export function AddPlant() {
         { label: "Soil Humidity",  name: "optimalSoilHumidity",   unit: "%",   placeholder: "0–100",  max: 100  },
         { label: "Air Humidity",   name: "optimalAirHumidity",    unit: "%",   placeholder: "0–100",  max: 100  },
         { label: "Light Intensity",name: "optimalLightIntensity", unit: "", placeholder: "0–1024", max: 1024 },
+
     ];
 
     const leftFields = fields.slice(0, 2);
@@ -209,6 +211,8 @@ export function AddPlant() {
                 placeholder={field.placeholder}
                 min={0}
                 max={field.max}
+
+                
             />
         </div>
     );
@@ -272,8 +276,8 @@ export function AddPlant() {
                         name="mac"
                         value={form.mac}
                         onChange={handleMacChange}
-                        placeholder="AA:BB:CC:DD:EE"
-                        maxLength={14}
+                        placeholder="AA:BB:CC:DD:EE:FF"
+                        maxLength={17}
                     />
                 </div>
                 <div className={styles["header-field"]}>

@@ -32,7 +32,6 @@ const PLANT_PRESETS: PlantPreset[] = [
 
 const READINGS_REQUIRED = 7;
 
-// ── Step 1: fill form & add plant ──────────────────────────────────────────
 interface FormState {
     mac: string;
     plantName: string;
@@ -108,7 +107,6 @@ export function IdkMyPlant() {
         setForm((prev) => ({ ...prev, soilType: prev.soilType === soil ? null : soil }));
     };
 
-    // ── Step 1: Add plant with user-provided optimal values ──────────────────
     const handleAddPlant = async () => {
         if (!form.mac || !form.plantName) {
             setError("Please enter a MAC address and plant name.");
@@ -140,7 +138,6 @@ export function IdkMyPlant() {
         }
     };
 
-    // ── Step 2: Check how many readings we have so far ───────────────────────
     const handleCheckReadings = async () => {
         setError(null);
         setIsLoading(true);
@@ -160,7 +157,6 @@ export function IdkMyPlant() {
         }
     };
 
-    // ── Step 3: Diagnose using Claude ────────────────────────────────────────
     const runDiagnosis = async (readings: SensorData[]) => {
         setStep("diagnosing");
 
@@ -214,7 +210,6 @@ Respond ONLY with valid JSON, no markdown:
             );
             if (!preset) throw new Error("Species not matched");
 
-            // Update plant with diagnosed optimal values
             await updatePlant(plantMac, {
                 mac: plantMac,
                 name: form.plantName,
@@ -240,8 +235,6 @@ Respond ONLY with valid JSON, no markdown:
 
     return (
         <div className={`${styles.container} ${theme === "dark" ? styles.dark : ""}`}>
-
-            {/* Top bar */}
             <div className={styles.topBar}>
                 <div className={styles.leftButtons}>
                     <button className={styles.backBtn} onClick={() => navigate("/AddPlant")}>
@@ -258,7 +251,6 @@ Respond ONLY with valid JSON, no markdown:
                 </div>
             </div>
 
-            {/* ── STEP: FORM ── */}
             {step === "form" && (
                 <>
                     <div className={styles.pageHeader}>
@@ -270,8 +262,6 @@ Respond ONLY with valid JSON, no markdown:
 
                     <div className={styles.content}>
                         <div className={styles.formColumn}>
-
-                            {/* MAC + Name */}
                             <div className={styles.card}>
                                 <div className={styles.cardLabel}> Device & Name</div>
                                 <div className={styles.twoCol}>
@@ -281,7 +271,7 @@ Respond ONLY with valid JSON, no markdown:
                                             className={styles.fieldInput}
                                             value={form.mac}
                                             onChange={handleMacChange}
-                                            placeholder="AA:BB:CC:DD:EE"
+                                            placeholder="AA:BB:CC:DD:EE:FF"
                                             maxLength={17}
                                         />
                                     </div>
@@ -297,7 +287,6 @@ Respond ONLY with valid JSON, no markdown:
                                 </div>
                             </div>
 
-                            {/* Your best guess for optimal values */}
                             <div className={styles.card}>
                                 <div className={styles.cardLabel}>Your Best Guess — Optimal Values</div>
                                 <p className={styles.cardHint}>These will be used until we diagnose your plant</p>
@@ -306,7 +295,7 @@ Respond ONLY with valid JSON, no markdown:
                                         { key: "optimalTemperature" as const, label: "Temperature", unit: "°C", min: 0, max: 50 },
                                         { key: "optimalAirHumidity" as const, label: "Air Humidity", unit: "%", min: 0, max: 100 },
                                         { key: "optimalSoilHumidity" as const, label: "Soil Humidity", unit: "%", min: 0, max: 100 },
-                                        { key: "optimalLightIntensity" as const, label: "Light Intensity", unit: "%", min: 0, max: 100 },
+                                        { key: "optimalLightIntensity" as const, label: "Light Intensity", unit: "", min: 0, max: 100 },
                                     ].map((field) => (
                                         <div key={field.key} className={styles.optimalBox}>
                                             <div className={styles.optimalLabel}>{field.label}</div>
@@ -325,8 +314,6 @@ Respond ONLY with valid JSON, no markdown:
                                     ))}
                                 </div>
                             </div>
-
-                            {/* Plant description */}
                             <div className={styles.card}>
                                 <div className={styles.cardLabel}>Height <span className={styles.badge}>5–30 cm</span></div>
                                 <div className={styles.sliderRow}>
@@ -409,7 +396,6 @@ Respond ONLY with valid JSON, no markdown:
                 </>
             )}
 
-            {/* ── STEP: WAITING FOR READINGS ── */}
             {step === "waiting" && (
                 <div className={styles.waitingWrapper}>
                     <div className={styles.waitingCard}>
@@ -447,7 +433,6 @@ Respond ONLY with valid JSON, no markdown:
                 </div>
             )}
 
-            {/* ── STEP: DIAGNOSING ── */}
             {step === "diagnosing" && (
                 <div className={styles.waitingWrapper}>
                     <div className={styles.waitingCard}>
@@ -462,7 +447,6 @@ Respond ONLY with valid JSON, no markdown:
                 </div>
             )}
 
-            {/* ── STEP: DONE ── */}
             {step === "done" && diagnosis && (
                 <div className={styles.waitingWrapper}>
                     <div className={styles.waitingCard}>

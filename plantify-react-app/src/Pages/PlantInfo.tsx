@@ -246,7 +246,7 @@ export function PlantInfo() {
     const waterLevel = plant?.watering?.waterLevel ?? 0;
 
     const metrics = [
-        { label: "Light",         value: fmt(plant?.optimalLightIntensity), unit: "%",        key: "light" },
+        { label: "Light",         value: fmt(plant?.optimalLightIntensity), unit: "",        key: "light" },
         { label: "Soil Humidity", value: fmt(plant?.optimalSoilHumidity),   unit: "%",        key: "soil"  },
         { label: "Air Humidity",  value: fmt(plant?.optimalAirHumidity),    unit: "%",        key: "air"   },
         { label: "Temperature",   value: fmt(plant?.optimalTemperature),    unit: scaleLabel, key: "temp"  },
@@ -411,7 +411,7 @@ export function PlantInfo() {
                             { label: "Temperature",   value: fmt(plant.sensorData.temperature),    unit: scaleLabel },
                             { label: "Air Humidity",  value: fmt(plant.sensorData.airHumidity),    unit: "%" },
                             { label: "Soil Humidity", value: fmt(plant.sensorData.soilHumidity),   unit: "%" },
-                            { label: "Light",         value: fmt(plant.sensorData.lightIntensity), unit: "%" },
+                            { label: "Light",         value: fmt(plant.sensorData.lightIntensity), unit: "" },
                             { label: "Pump Time",     value: pumpTime != null ? String(pumpTime) : null, unit: "s" },
                         ].map((s) => (
                             <div key={s.label} className={styles.box} style={{ minWidth: "140px" }}>
