@@ -24,7 +24,33 @@ body {
     z-index: 100;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
+.prefilled-banner {
+    margin: 8px 24px 0;
+    padding: 10px 16px;
+    background: #e8f5d8;
+    border: 1px solid #b8dfa0;
+    border-radius: 10px;
+    font-size: 13px;
+    color: #2d5509;
+    font-weight: 500;
+}
 
+.dark .prefilled-banner {
+    background: #1e3a0e;
+    border-color: #3a6a1a;
+    color: #a8d878;
+}
+
+/* ── Box highlight when prefilled ── */
+.box.boxPrefilled {
+    border-color: #3b6d11;
+    background: #f0fae6;
+}
+
+.dark .box.boxPrefilled {
+    border-color: #5a9a22;
+    background: #1a2e0a;
+}
 .dark .top-bar, .dark.top-bar {
     background: #1a1a1a;
 }
