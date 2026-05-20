@@ -274,8 +274,8 @@ export function AddPlant() {
                         name="mac"
                         value={form.mac}
                         onChange={handleMacChange}
-                        placeholder="AA:BB:CC:DD:EE"
-                        maxLength={14}
+                        placeholder="AA:BB:CC:DD:EE:FF"
+                        maxLength={17}
                     />
                 </div>
                 <div className={styles["header-field"]}>

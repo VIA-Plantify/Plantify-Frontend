@@ -271,7 +271,7 @@ Respond ONLY with valid JSON, no markdown:
                                             className={styles.fieldInput}
                                             value={form.mac}
                                             onChange={handleMacChange}
-                                            placeholder="AA:BB:CC:DD:EE"
+                                            placeholder="AA:BB:CC:DD:EE:FF"
                                             maxLength={17}
                                         />
                                     </div>
