@@ -36,7 +36,7 @@ export function UpdatePlant() {
         optimalLightIntensity: useRef<HTMLInputElement>(null),
     };
 
-    
+
     useEffect(() => {
         const fetchAll = async () => {
             try {
@@ -53,7 +53,7 @@ export function UpdatePlant() {
         fetchAll();
     }, []);
 
-    // Pre-fill form when selected plant changes
+    
     useEffect(() => {
         if (!selectedMac) return;
         const fetchOne = async () => {
