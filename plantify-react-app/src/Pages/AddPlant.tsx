@@ -15,7 +15,6 @@ interface PlantPreset {
     optimalAirHumidity: number;
     optimalSoilHumidity: number;
     optimalLightIntensity: number;
-    optimalLightPeriod: number;
 }
 
 const PLANT_PRESETS: PlantPreset[] = [
@@ -26,7 +25,7 @@ const PLANT_PRESETS: PlantPreset[] = [
         optimalAirHumidity: 20,
         optimalSoilHumidity: 15,
         optimalLightIntensity: 95,
-        optimalLightPeriod: 14,
+
     },
     {
         emoji: "🌿",
@@ -35,7 +34,7 @@ const PLANT_PRESETS: PlantPreset[] = [
         optimalAirHumidity: 65,
         optimalSoilHumidity: 55,
         optimalLightIntensity: 60,
-        optimalLightPeriod: 12,
+
     },
     {
         emoji: "🪴",
@@ -44,7 +43,7 @@ const PLANT_PRESETS: PlantPreset[] = [
         optimalAirHumidity: 50,
         optimalSoilHumidity: 45,
         optimalLightIntensity: 40,
-        optimalLightPeriod: 10,
+
     },
     {
         emoji: "🌸",
@@ -53,7 +52,7 @@ const PLANT_PRESETS: PlantPreset[] = [
         optimalAirHumidity: 70,
         optimalSoilHumidity: 65,
         optimalLightIntensity: 35,
-        optimalLightPeriod: 10,
+
     },
     {
         emoji: "🌱",
@@ -62,7 +61,7 @@ const PLANT_PRESETS: PlantPreset[] = [
         optimalAirHumidity: 40,
         optimalSoilHumidity: 30,
         optimalLightIntensity: 50,
-        optimalLightPeriod: 12,
+
     },
     {
         emoji: "🌺",
@@ -71,7 +70,7 @@ const PLANT_PRESETS: PlantPreset[] = [
         optimalAirHumidity: 75,
         optimalSoilHumidity: 60,
         optimalLightIntensity: 55,
-        optimalLightPeriod: 12,
+
     },
     {
         emoji: "🍃",
@@ -80,7 +79,7 @@ const PLANT_PRESETS: PlantPreset[] = [
         optimalAirHumidity: 60,
         optimalSoilHumidity: 50,
         optimalLightIntensity: 80,
-        optimalLightPeriod: 13,
+
     },
 ];
 
@@ -100,7 +99,7 @@ export function AddPlant() {
         optimalAirHumidity: "",
         optimalSoilHumidity: "",
         optimalLightIntensity: "",
-        optimalLightPeriod: "",
+
     });
 
     const [error, setError] = useState<string | null>(null);
@@ -143,7 +142,6 @@ export function AddPlant() {
             optimalAirHumidity: String(preset.optimalAirHumidity),
             optimalSoilHumidity: String(preset.optimalSoilHumidity),
             optimalLightIntensity: String(preset.optimalLightIntensity),
-            optimalLightPeriod: String(preset.optimalLightPeriod),
         }));
         setDropdownOpen(false);
     };
@@ -302,20 +300,6 @@ export function AddPlant() {
 
 
             <div className={styles["bottom-section"]}>
-                <div className={styles["light-period-field"]}>
-                    <label className={styles["header-label"]}>Light Period (hours)</label>
-                    <input
-                        className={`${styles["header-input"]} ${styles["centered-input"]}`}
-                        type="number"
-                        name="optimalLightPeriod"
-                        value={form.optimalLightPeriod}
-                        onChange={handleChange}
-                        placeholder="e.g. 12"
-                        min={0}
-                        max={24}
-                    />
-                </div>
-
                 {error && <p className={styles["error-text"]}>{error}</p>}
 
                 <button
