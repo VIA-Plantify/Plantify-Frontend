@@ -183,7 +183,7 @@ export function AddPlant() {
         { label: "Temperature", name: "optimalTemperature", unit: "°C", placeholder: "0–100" },
         { label: "Soil Humidity", name: "optimalSoilHumidity", unit: "%", placeholder: "0–100" },
         { label: "Air Humidity", name: "optimalAirHumidity", unit: "%", placeholder: "0–100" },
-        { label: "Light Intensity", name: "optimalLightIntensity", unit: "%", placeholder: "0–100" },
+        { label: "Light Intensity", name: "optimalLightIntensity", unit: "", placeholder: "0–100" },
     ];
 
     const leftFields = fields.slice(0, 2);
