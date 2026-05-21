@@ -41,3 +41,16 @@ export interface CreatePlantRequest {
     optimalSoilHumidity?: number;
     optimalLightIntensity?: number;
 }
+
+export interface SimilarPlant {
+    id: number;
+    common: string;
+    latin: string;
+    category: string;
+    climate: string;
+    ideallight: string;
+    toleratedlight: string;
+    watering: string;
+    tempmax: number;
+    tempmin: number;
+}

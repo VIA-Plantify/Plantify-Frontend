@@ -9,6 +9,13 @@ import type { Plant } from "../api/Plants/plantTypes";
 import { useTheme } from '../theme/ThemeContext';
 import { ThemeToggle } from '../theme/ThemeToggle';
 
+const fieldLimits: Record<string, number> = {
+    optimalTemperature: 100,
+    optimalAirHumidity: 100,
+    optimalSoilHumidity: 100,
+    optimalLightIntensity: 1024,
+};
+
 export function UpdatePlant() {
     const navigate = useNavigate();
 
@@ -39,7 +46,6 @@ export function UpdatePlant() {
         optimalLightIntensity: useRef<HTMLInputElement>(null),
     };
 
-
     useEffect(() => {
         const fetchAll = async () => {
             try {
@@ -56,7 +62,6 @@ export function UpdatePlant() {
         fetchAll();
     }, []);
 
-    
     useEffect(() => {
         if (!selectedMac) return;
         const fetchOne = async () => {
@@ -85,7 +90,9 @@ export function UpdatePlant() {
                 return;
             }
             const num = parseFloat(value);
-            const clamped = Math.min(100, Math.max(0, num));
+            const max = fieldLimits[name] ?? 100;
+            const clamped = Math.min(max, Math.max(0, num));
+
             setForm((prev) => ({ ...prev, [name]: String(clamped) }));
         } else {
             setForm((prev) => ({ ...prev, [name]: value }));
@@ -123,11 +130,14 @@ export function UpdatePlant() {
         name: keyof typeof inputRefs;
         unit?: string;
         placeholder?: string;
+        max: number;
     }[] = [
-        { label: "Temperature", name: "optimalTemperature", unit: "°C", placeholder: "0–100" },
-        { label: "Soil Humidity", name: "optimalSoilHumidity", unit: "%", placeholder: "0–100" },
-        { label: "Air Humidity", name: "optimalAirHumidity", unit: "%", placeholder: "0–100" },
-        { label: "Light Intensity", name: "optimalLightIntensity", unit: "%", placeholder: "0–100" },
+
+        { label: "Temperature",    name: "optimalTemperature",    unit: "°C",  placeholder: "0–100",  max: 100  },
+        { label: "Soil Humidity",  name: "optimalSoilHumidity",   unit: "%",   placeholder: "0–100",  max: 100  },
+        { label: "Air Humidity",   name: "optimalAirHumidity",    unit: "%",   placeholder: "0–100",  max: 100  },
+        { label: "Light Intensity",name: "optimalLightIntensity", unit: "", placeholder: "0–1024", max: 1024 },
+
     ];
 
     const leftFields = fields.slice(0, 2);
@@ -151,7 +161,8 @@ export function UpdatePlant() {
                 onChange={handleChange}
                 placeholder={field.placeholder}
                 min={0}
-                max={100}
+                max={field.max}
+
             />
         </div>
     );
@@ -160,7 +171,6 @@ export function UpdatePlant() {
 
     return (
         <div className={`${styles["plant-info-container"]} ${theme === 'dark' ? styles.dark : ''}`}>
-
 
             <div className={styles["top-bar"]}>
                 <div className={styles["left-buttons"]}>
@@ -179,7 +189,6 @@ export function UpdatePlant() {
                     </button>
                 </div>
             </div>
-
 
             <div className={styles["plant-header"]}>
                 <div className={styles["header-field"]}>
@@ -209,7 +218,6 @@ export function UpdatePlant() {
                 </div>
             </div>
 
-
             <div className={styles["plant-info-content"]}>
                 <div className={styles["left-boxes"]}>{leftFields.map(renderBox)}</div>
                 <div className={styles["center-image"]}>
@@ -217,7 +225,6 @@ export function UpdatePlant() {
                 </div>
                 <div className={styles["right-boxes"]}>{rightFields.map(renderBox)}</div>
             </div>
-
 
             <div className={styles["bottom-section"]}>
                 {error && <p className={styles["error-text"]}>{error}</p>}

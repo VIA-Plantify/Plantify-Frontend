@@ -37,7 +37,42 @@ body {
   margin-left: 20px;
   color: black;
 }
+.chart-limit-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
 
+.chart-limit-label {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.chart-limit-input {
+  width: 80px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  text-align: center;
+}
+
+.chart-limit-btn {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: none;
+  background-color: #11ae5e;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.chart-limit-btn:hover {
+  background-color: #0e9a52;
+}
 .add-btn {
   background-color: #11ae5e;
   color: white;
@@ -97,7 +132,21 @@ body {
   color: #666;
   font-weight: normal;
 }
+.section-header {
+  text-align: center;
+  margin-bottom: 12px;
+}
 
+.plant-info-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.value-warn {
+  color: #e24b4a;
+}
 .logout-btn {
   background: none;
   border: 2px solid #ff4d4d;
@@ -109,7 +158,13 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
 }
-
+.plant-info-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+}
 .logout-btn:hover {
   background-color: #ff4d4d;
   color: white;

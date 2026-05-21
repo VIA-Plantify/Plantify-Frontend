@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import Cookies from "js-cookie";
 import { createPlant } from "../api/Plants/plantApi";
 import { getErrorMessage } from "../api/authApi";
@@ -7,6 +7,7 @@ import styles from "./Stylesheets/AddPlant.module.css";
 import plantImg from "../assets/plant.placeholder.png";
 import { useTheme } from '../theme/ThemeContext';
 import { ThemeToggle } from '../theme/ThemeToggle';
+
 
 interface PlantPreset {
     emoji: string;
@@ -24,8 +25,7 @@ const PLANT_PRESETS: PlantPreset[] = [
         optimalTemperature: 28,
         optimalAirHumidity: 20,
         optimalSoilHumidity: 15,
-        optimalLightIntensity: 95,
-
+        optimalLightIntensity: 973,
     },
     {
         emoji: "🌿",
@@ -33,8 +33,7 @@ const PLANT_PRESETS: PlantPreset[] = [
         optimalTemperature: 22,
         optimalAirHumidity: 65,
         optimalSoilHumidity: 55,
-        optimalLightIntensity: 60,
-
+        optimalLightIntensity: 614,
     },
     {
         emoji: "🪴",
@@ -42,8 +41,7 @@ const PLANT_PRESETS: PlantPreset[] = [
         optimalTemperature: 21,
         optimalAirHumidity: 50,
         optimalSoilHumidity: 45,
-        optimalLightIntensity: 40,
-
+        optimalLightIntensity: 410,
     },
     {
         emoji: "🌸",
@@ -51,8 +49,7 @@ const PLANT_PRESETS: PlantPreset[] = [
         optimalTemperature: 20,
         optimalAirHumidity: 70,
         optimalSoilHumidity: 65,
-        optimalLightIntensity: 35,
-
+        optimalLightIntensity: 358,
     },
     {
         emoji: "🌱",
@@ -60,8 +57,7 @@ const PLANT_PRESETS: PlantPreset[] = [
         optimalTemperature: 23,
         optimalAirHumidity: 40,
         optimalSoilHumidity: 30,
-        optimalLightIntensity: 50,
-
+        optimalLightIntensity: 512,
     },
     {
         emoji: "🌺",
@@ -69,8 +65,7 @@ const PLANT_PRESETS: PlantPreset[] = [
         optimalTemperature: 19,
         optimalAirHumidity: 75,
         optimalSoilHumidity: 60,
-        optimalLightIntensity: 55,
-
+        optimalLightIntensity: 563,
     },
     {
         emoji: "🍃",
@@ -78,10 +73,16 @@ const PLANT_PRESETS: PlantPreset[] = [
         optimalTemperature: 22,
         optimalAirHumidity: 60,
         optimalSoilHumidity: 50,
-        optimalLightIntensity: 80,
-
+        optimalLightIntensity: 819,
     },
 ];
+
+const fieldLimits: Record<string, number> = {
+    optimalTemperature: 100,
+    optimalAirHumidity: 100,
+    optimalSoilHumidity: 100,
+    optimalLightIntensity: 1024,
+};
 
 export function AddPlant() {
     const navigate = useNavigate();
@@ -99,7 +100,6 @@ export function AddPlant() {
         optimalAirHumidity: "",
         optimalSoilHumidity: "",
         optimalLightIntensity: "",
-
     });
 
     const [error, setError] = useState<string | null>(null);
@@ -121,7 +121,9 @@ export function AddPlant() {
                 return;
             }
             const num = parseFloat(value);
-            const clamped = Math.min(100, Math.max(0, num));
+            const max = fieldLimits[name] ?? 100;
+            const clamped = Math.min(max, Math.max(0, num));
+
             setForm((prev) => ({ ...prev, [name]: String(clamped) }));
         } else {
             setForm((prev) => ({ ...prev, [name]: value }));
@@ -178,11 +180,13 @@ export function AddPlant() {
         name: keyof typeof inputRefs;
         unit?: string;
         placeholder?: string;
+        max: number;
     }[] = [
-        { label: "Temperature", name: "optimalTemperature", unit: "°C", placeholder: "0–100" },
-        { label: "Soil Humidity", name: "optimalSoilHumidity", unit: "%", placeholder: "0–100" },
-        { label: "Air Humidity", name: "optimalAirHumidity", unit: "%", placeholder: "0–100" },
-        { label: "Light Intensity", name: "optimalLightIntensity", unit: "%", placeholder: "0–100" },
+        { label: "Temperature",    name: "optimalTemperature",    unit: "°C",  placeholder: "0–100",  max: 100  },
+        { label: "Soil Humidity",  name: "optimalSoilHumidity",   unit: "%",   placeholder: "0–100",  max: 100  },
+        { label: "Air Humidity",   name: "optimalAirHumidity",    unit: "%",   placeholder: "0–100",  max: 100  },
+        { label: "Light Intensity",name: "optimalLightIntensity", unit: "", placeholder: "0–1024", max: 1024 },
+
     ];
 
     const leftFields = fields.slice(0, 2);
@@ -206,14 +210,15 @@ export function AddPlant() {
                 onChange={handleChange}
                 placeholder={field.placeholder}
                 min={0}
-                max={100}
+                max={field.max}
+
+                
             />
         </div>
     );
 
     return (
         <div className={`${styles["plant-info-container"]} ${theme === 'dark' ? styles.dark : ''}`} onClick={() => dropdownOpen && setDropdownOpen(false)}>
-
 
             <div className={styles["top-bar"]}>
                 <div className={styles["left-buttons"]}>
@@ -232,7 +237,6 @@ export function AddPlant() {
                     </button>
                 </div>
             </div>
-
 
             <div className={styles["preset-section"]} onClick={(e) => e.stopPropagation()}>
                 <button
@@ -255,7 +259,7 @@ export function AddPlant() {
                                 <div className={styles["preset-info"]}>
                                     <span className={styles["preset-name"]}>{preset.name}</span>
                                     <span className={styles["preset-stats"]}>
-                                        {preset.optimalTemperature}°C · {preset.optimalSoilHumidity}% soil · {preset.optimalLightIntensity}% light
+                                        {preset.optimalTemperature}°C · {preset.optimalSoilHumidity}% soil · {preset.optimalLightIntensity}
                                     </span>
                                 </div>
                             </button>
@@ -263,7 +267,6 @@ export function AddPlant() {
                     </div>
                 )}
             </div>
-
 
             <div className={styles["plant-header"]}>
                 <div className={styles["header-field"]}>
@@ -289,7 +292,6 @@ export function AddPlant() {
                 </div>
             </div>
 
-
             <div className={styles["plant-info-content"]}>
                 <div className={styles["left-boxes"]}>{leftFields.map(renderBox)}</div>
                 <div className={styles["center-image"]}>
@@ -298,10 +300,8 @@ export function AddPlant() {
                 <div className={styles["right-boxes"]}>{rightFields.map(renderBox)}</div>
             </div>
 
-
             <div className={styles["bottom-section"]}>
                 {error && <p className={styles["error-text"]}>{error}</p>}
-
                 <button
                     className={styles["submit-btn"]}
                     onClick={handleSubmit}
@@ -310,6 +310,7 @@ export function AddPlant() {
                     {isLoading ? "Adding..." : "Add Plant"}
                 </button>
             </div>
+            <p><Link className={styles.link} to="/IdkMyPlant">I don't know my plant's optimal values</Link></p>
         </div>
     );
 }
