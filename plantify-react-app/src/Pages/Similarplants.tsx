@@ -5,8 +5,6 @@ import Cookies from "js-cookie";
 import { useTheme } from '../theme/ThemeContext';
 import { ThemeToggle } from '../theme/ThemeToggle';
 import { getSimilarPlants } from "../api/Plants/malPlantApi.ts";
-import type { SimilarPlant } from "../api/Plants/plantTypes";
-
 
 const LIGHT_OPTIONS = [
     { label: "It sits in a dim corner with no direct sun", value: "Diffused" },
@@ -47,7 +45,7 @@ export function SimilarPlants() {
     const [climate, setClimate] = useState("");
     const [tempmax, setTempmax] = useState(26);
     const [tempmin, setTempmin] = useState(15);
-    const [results, setResults] = useState<SimilarPlant[]>([]);
+    const [results, setResults] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
@@ -74,7 +72,7 @@ export function SimilarPlants() {
                 tempmax,
                 tempmin
             );
-            setResults(data.slice(0, 5));
+            setResults(data.recommended_plants.slice(0, 5));
         } catch {
             setError("Something went wrong. Try again.");
         } finally {
@@ -177,13 +175,9 @@ export function SimilarPlants() {
 
                 {results.length > 0 && (
                     <div className={styles["results-grid"]}>
-                        {results.map((plant) => (
-                            <div key={plant.id} className={styles["plant-card"]}>
-                                <h3 className={styles["plant-common"]}>{plant.common}</h3>
-                                <p className={styles["plant-latin"]}>{plant.latin}</p>
-                                <p className={styles["plant-detail"]}>💧 {plant.watering}</p>
-                                <p className={styles["plant-detail"]}>☀️ {plant.ideallight}</p>
-                                <p className={styles["plant-detail"]}>🌡️ {plant.tempmin}–{plant.tempmax} °C</p>
+                        {results.map((name, i) => (
+                            <div key={i} className={styles["plant-card"]}>
+                                <h3 className={styles["plant-common"]}>{name}</h3>
                             </div>
                         ))}
                     </div>

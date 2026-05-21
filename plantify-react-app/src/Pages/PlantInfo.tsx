@@ -6,9 +6,6 @@ import { getPlant, getPlants, convertTemperature } from "../api/Plants/plantApi"
 import { getPumpTime } from "../api/Plants/malPlantApi.ts";
 import { getErrorMessage } from "../api/authApi";
 import type { Plant } from "../api/Plants/plantTypes";
-//import plant1 from "../assets/plant1.png";
-//import plant2 from "../assets/plant2.png";
-//import plant3 from "../assets/plant3.png";
 import plantImg from "../assets/PLANT.png";
 import { useTheme } from '../theme/ThemeContext';
 import { ThemeToggle } from '../theme/ThemeToggle';
@@ -168,6 +165,9 @@ function PlantPot({ waterLevel, isLoading }: { waterLevel: number; isLoading: bo
 const fmt = (value: number | null | undefined) =>
     value != null ? value.toFixed(1) : null;
 
+const isBelow = (current: number | null | undefined, optimal: number | null | undefined) =>
+    current != null && optimal != null && current < optimal;
+
 export function PlantInfo() {
 
     const navigate = useNavigate();
@@ -228,7 +228,6 @@ export function PlantInfo() {
         if (!plant) return;
         try {
             const newScale = plant.scale === 0 ? 1 : 0;
-            console.log(newScale);
             await convertTemperature(plant.mac, newScale);
             await fetchPlant(plant.mac);
         } catch (err) {
@@ -246,10 +245,10 @@ export function PlantInfo() {
     const waterLevel = plant?.watering?.waterLevel ?? 0;
 
     const metrics = [
-        { label: "Light",         value: fmt(plant?.optimalLightIntensity), unit: "",        key: "light" },
-        { label: "Soil Humidity", value: fmt(plant?.optimalSoilHumidity),   unit: "%",        key: "soil"  },
-        { label: "Air Humidity",  value: fmt(plant?.optimalAirHumidity),    unit: "%",        key: "air"   },
-        { label: "Temperature",   value: fmt(plant?.optimalTemperature),    unit: scaleLabel, key: "temp"  },
+        { label: "Light",         current: plant?.sensorData?.lightIntensity, optimal: plant?.optimalLightIntensity, unit: "",        key: "light" },
+        { label: "Soil Humidity", current: plant?.sensorData?.soilHumidity,   optimal: plant?.optimalSoilHumidity,   unit: "%",        key: "soil"  },
+        { label: "Air Humidity",  current: plant?.sensorData?.airHumidity,    optimal: plant?.optimalAirHumidity,    unit: "%",        key: "air"   },
+        { label: "Temperature",   current: plant?.sensorData?.temperature,    optimal: plant?.optimalTemperature,    unit: scaleLabel, key: "temp"  },
     ];
 
     const leftMetrics  = metrics.slice(0, 2);
@@ -270,7 +269,6 @@ export function PlantInfo() {
         const chartWidth  = width  - 2 * padding;
         const chartHeight = height - 2 * padding;
 
-        // Dynamic Y axis: min-10 and max+10, clamped to [0, 100]
         const rawMin = Math.min(...data);
         const rawMax = Math.max(...data);
         const yMin = Math.max(0,   rawMin - 10);
@@ -279,7 +277,6 @@ export function PlantInfo() {
 
         const xStep = data.length > 1 ? chartWidth / (data.length - 1) : 0;
 
-        // Convert a data value to SVG Y coordinate
         const toY = (value: number) =>
             padding + chartHeight - ((value - yMin) / yRange) * chartHeight;
 
@@ -292,7 +289,6 @@ export function PlantInfo() {
         const gridColor  = theme === 'dark' ? '#333'    : '#ddd';
         const labelColor = theme === 'dark' ? '#aaa'    : '#888';
 
-        // Generate 6 evenly spaced grid lines between yMin and yMax
         const gridSteps = 5;
         const stepSize  = (yMax - yMin) / gridSteps;
         const gridLevels = Array.from({ length: gridSteps + 1 }, (_, i) =>
@@ -375,53 +371,54 @@ export function PlantInfo() {
                 </div>
             </div>
 
-            <div className={styles["plant-info-content"]}>
-                <div className={styles["left-boxes"]}>
-                    {leftMetrics.map((metric) => (
-                        <div key={metric.key} className={styles.box}>
-                            <div className={styles["box-label"]}>{metric.label}</div>
-                            <div className={styles["box-value"]}>
-                                {isLoading ? "..." : metric.value != null ? `${metric.value}${metric.unit}` : "—"}
+            <div className={styles["plant-info-wrapper"]}>
+                <h3 className={styles["section-header"]}>Current Values</h3>
+                <div className={styles["plant-info-content"]}>
+                    <div className={styles["left-boxes"]}>
+                        {leftMetrics.map((metric) => (
+                            <div key={metric.key} className={styles.box}>
+                                <div className={styles["box-label"]}>{metric.label}</div>
+                                <div className={`${styles["box-value"]} ${isBelow(metric.current, metric.optimal) ? styles["value-warn"] : ""}`}>
+                                    {isLoading ? "..." : metric.current != null ? `${fmt(metric.current)}${metric.unit}` : "—"}
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
 
-                <div className={styles["center-image"]}>
-                    <PlantPot waterLevel={waterLevel} isLoading={isLoading} />
-                </div>
+                    <div className={styles["center-image"]}>
+                        <PlantPot waterLevel={waterLevel} isLoading={isLoading} />
+                    </div>
 
-                <div className={styles["right-boxes"]}>
-                    {rightMetrics.map((metric) => (
-                        <div key={metric.key} className={styles.box}>
-                            <div className={styles["box-label"]}>{metric.label}</div>
-                            <div className={styles["box-value"]}>
-                                {isLoading ? "..." : metric.value != null ? `${metric.value}${metric.unit}` : "—"}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            {plant?.sensorData && (
-                <div className={styles["chart-section"]} style={{ marginTop: "20px" }}>
-                    <h3 className={styles["chart-title"]}>Latest sensor reading</h3>
-                    <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
-                        {[
-                            { label: "Temperature",   value: fmt(plant.sensorData.temperature),    unit: scaleLabel },
-                            { label: "Air Humidity",  value: fmt(plant.sensorData.airHumidity),    unit: "%" },
-                            { label: "Soil Humidity", value: fmt(plant.sensorData.soilHumidity),   unit: "%" },
-                            { label: "Light",         value: fmt(plant.sensorData.lightIntensity), unit: "" },
-                            { label: "Pump Time",     value: pumpTime != null ? String(pumpTime) : null, unit: "s" },
-                        ].map((s) => (
-                            <div key={s.label} className={styles.box} style={{ minWidth: "140px" }}>
-                                <div className={styles["box-label"]}>{s.label}</div>
-                                <div className={styles["box-value"]}>{s.value != null ? `${s.value}${s.unit}` : "—"}</div>
+                    <div className={styles["right-boxes"]}>
+                        {rightMetrics.map((metric) => (
+                            <div key={metric.key} className={styles.box}>
+                                <div className={styles["box-label"]}>{metric.label}</div>
+                                <div className={`${styles["box-value"]} ${isBelow(metric.current, metric.optimal) ? styles["value-warn"] : ""}`}>
+                                    {isLoading ? "..." : metric.current != null ? `${fmt(metric.current)}${metric.unit}` : "—"}
+                                </div>
                             </div>
                         ))}
                     </div>
                 </div>
-            )}
+            </div>
+
+            <div className={styles["chart-section"]} style={{ marginTop: "20px" }}>
+                <h3 className={styles["chart-title"]}>Optimal Values</h3>
+                <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
+                    {[
+                        { label: "Light",         value: fmt(plant?.optimalLightIntensity), unit: ""         },
+                        { label: "Soil Humidity", value: fmt(plant?.optimalSoilHumidity),   unit: "%"        },
+                        { label: "Air Humidity",  value: fmt(plant?.optimalAirHumidity),    unit: "%"        },
+                        { label: "Temperature",   value: fmt(plant?.optimalTemperature),    unit: scaleLabel },
+                        { label: "Pump Time",     value: pumpTime != null ? String(pumpTime) : null, unit: "s" },
+                    ].map((s) => (
+                        <div key={s.label} className={styles.box} style={{ minWidth: "140px" }}>
+                            <div className={styles["box-label"]}>{s.label}</div>
+                            <div className={styles["box-value"]}>{s.value != null ? `${s.value}${s.unit}` : "—"}</div>
+                        </div>
+                    ))}
+                </div>
+            </div>
 
             {plant?.watering && (
                 <div className={styles["chart-section"]} style={{ marginTop: "20px" }}>
@@ -469,6 +466,7 @@ export function PlantInfo() {
                         Apply
                     </button>
                 </div>
+                <p className={styles["chart-limit-label"]}>Each reading represents one hour.</p>
                 {isLoading ? <p>Loading chart...</p> : renderLineChart()}
             </div>
 

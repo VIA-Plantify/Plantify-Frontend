@@ -1,11 +1,10 @@
 import mlApi from "./malPlantInstance.ts"
-import type {SimilarPlant} from "./plantTypes.ts";
 
 
-export const getPumpTime = async (username: string, plantMac: string): Promise<number> => {
-    const encodedMac = encodeURIComponent(plantMac);
-    const response = await mlApi.get(`/pumptime/${username}/${encodedMac}`);
-    return Number(response.data);
+type RecommendResponse = {
+    recommended_plants: string[];
+    label: string;
+    probabilities: Record<string, number>;
 };
 
 export const getSimilarPlants = async (
@@ -16,8 +15,8 @@ export const getSimilarPlants = async (
     tempmax: number,
     tempmin: number,
     n_recommendations: number = 5
-): Promise<SimilarPlant[]> => {
-    const response = await mlApi.post<SimilarPlant[]>("/plantcare/recommend", {
+): Promise<RecommendResponse> => {
+    const response = await mlApi.post<RecommendResponse>("/plantcare/recommend", {
         climate,
         ideallight,
         toleratedlight,
@@ -27,4 +26,4 @@ export const getSimilarPlants = async (
         n_recommendations,
     });
     return response.data;
-};
+};;
