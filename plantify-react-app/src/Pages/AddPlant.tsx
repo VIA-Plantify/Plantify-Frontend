@@ -310,7 +310,7 @@ export function AddPlant() {
                     {isLoading ? "Adding..." : "Add Plant"}
                 </button>
             </div>
-            <p><Link className={styles.link} to="/IdkMyPlant">I dont know my plant optimal values</Link></p>
+            <p><Link className={styles.link} to="/IdkMyPlant">I don't know my plant's optimal values</Link></p>
         </div>
     );
 }
