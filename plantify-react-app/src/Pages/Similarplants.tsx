@@ -164,7 +164,7 @@ export function SimilarPlants() {
                     </div>
 
                     <button className={styles["predict-btn"]} onClick={handlePredict}>
-                        Predict my shit
+                        Predict
                     </button>
 
                 </div>
