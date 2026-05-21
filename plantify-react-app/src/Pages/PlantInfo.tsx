@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "./Stylesheets/PlantInfo.module.css";
 import Cookies from "js-cookie";
 import { getPlant, getPlants, convertTemperature } from "../api/Plants/plantApi";
-import { getPumpTime } from "../api/Plants/MalPlant";
+import { getPumpTime } from "../api/Plants/malPlantApi.ts";
 import { getErrorMessage } from "../api/authApi";
 import type { Plant } from "../api/Plants/plantTypes";
 //import plant1 from "../assets/plant1.png";

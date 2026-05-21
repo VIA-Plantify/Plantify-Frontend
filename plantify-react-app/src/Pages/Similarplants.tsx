@@ -4,7 +4,9 @@ import styles from "./Stylesheets/Similarplants.module.css";
 import Cookies from "js-cookie";
 import { useTheme } from '../theme/ThemeContext';
 import { ThemeToggle } from '../theme/ThemeToggle';
-import { getSimilarPlants, type SimilarPlant } from "../api/Plants/similarPlantsApi.ts";
+import { getSimilarPlants } from "../api/Plants/malPlantApi.ts";
+import type { SimilarPlant } from "../api/Plants/plantTypes";
+
 
 const LIGHT_OPTIONS = [
     { label: "It sits in a dim corner with no direct sun", value: "Diffused" },
