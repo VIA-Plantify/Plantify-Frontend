@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import Login from './Pages/Login.tsx';
 import Register from './Pages/Register.tsx';
 import PlantInfo from './Pages/PlantInfo.tsx';
@@ -13,7 +13,7 @@ function App() {
 
     return (
         <ThemeProvider>
-            <BrowserRouter>
+            <HashRouter>
                 <Routes>
                     <Route path="/" element={<Login />} />
                     <Route path="/Register" element={<Register />}/>
@@ -23,7 +23,7 @@ function App() {
                    <Route path="/IdkMyPlant" element={<IdkMyPlant/>}/>
                     <Route path="/SimilarPlants" element={<SimilarPlants/>} />
                 </Routes>
-            </BrowserRouter>
+            </HashRouter>
         </ThemeProvider>
     )
 }
