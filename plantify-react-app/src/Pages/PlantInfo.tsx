@@ -271,8 +271,8 @@ export function PlantInfo() {
 
         const rawMin = Math.min(...data);
         const rawMax = Math.max(...data);
-        const yMin = Math.max(0,   rawMin - 10);
-        const yMax = Math.min(100, rawMax + 10);
+        const yMin = Math.max(0,   rawMin - 0.5);
+        const yMax = Math.min(100, rawMax + 0.5);
         const yRange = yMax - yMin || 1;
 
         const xStep = data.length > 1 ? chartWidth / (data.length - 1) : 0;
