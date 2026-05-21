@@ -132,7 +132,21 @@ body {
   color: #666;
   font-weight: normal;
 }
+.section-header {
+  text-align: center;
+  margin-bottom: 12px;
+}
 
+.plant-info-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.value-warn {
+  color: #e24b4a;
+}
 .logout-btn {
   background: none;
   border: 2px solid #ff4d4d;
@@ -144,7 +158,13 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
 }
-
+.plant-info-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+}
 .logout-btn:hover {
   background-color: #ff4d4d;
   color: white;
