@@ -30,7 +30,7 @@ const CLIMATE_OPTIONS = [
     { label: "Warm and very humid (bathroom, kitchen)", value: "Tropical humid" },
 ];
 
-const MLAPI = import.meta.env.VITE_MLAPI_URL;
+const MLAPI = import.meta.env.VITE_AZURE_API_FOR_ML;
 
 export function SimilarPlants() {
     const navigate = useNavigate();

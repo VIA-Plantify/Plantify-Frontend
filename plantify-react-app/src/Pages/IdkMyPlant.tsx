@@ -62,7 +62,7 @@ function avg(readings: SensorData[], key: keyof SensorData): number {
     return Math.round(vals.reduce((a, b) => a + b, 0) / vals.length);
 }
 
-const MLAPI = import.meta.env.VITE_MLAPI_URL;
+const MLAPI = import.meta.env.VITE_AZURE_API_FOR_ML;
 
 export function IdkMyPlant() {
     const navigate = useNavigate();
