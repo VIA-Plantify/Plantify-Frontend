@@ -265,9 +265,12 @@ export function Login() {
                     )}
 
                     {userData && (
-                        <div>
-                            <button className={styles.button2} onClick={handleLogout}>Logout</button>
-                        </div>
+                        <><h3>Due to technical issues, we kindly request you to log out and log
+                            back in. Sorry for the inconvenience.</h3>
+                            <div>
+                                <button className={styles.button2} onClick={handleLogout}>Logout</button>
+                            </div>
+                        </>
                     )}
                 </div>
             </div>
