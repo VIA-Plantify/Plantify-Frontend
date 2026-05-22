@@ -30,6 +30,8 @@ const CLIMATE_OPTIONS = [
     { label: "Warm and very humid (bathroom, kitchen)", value: "Tropical humid" },
 ];
 
+const MLAPI = import.meta.env.VITE_MLAPI_URL;
+
 export function SimilarPlants() {
     const navigate = useNavigate();
     const { theme } = useTheme();
@@ -182,6 +184,13 @@ export function SimilarPlants() {
                         ))}
                     </div>
                 )}
+                <div className={styles["graph-section"]}>
+                    <img
+                        src={`${MLAPI}/graph/plot`}
+                        alt="ML plant graph"
+                        className={styles["graph-img"]}
+                    />
+                </div>
 
             </div>
         </div>
