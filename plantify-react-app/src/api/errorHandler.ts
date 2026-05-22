@@ -25,7 +25,21 @@ export const getErrorMessage = (error: unknown): ApiError => {
             const match = data.match(/(\w+ cannot be empty|\w+ is required|\w+ must be)/i);
             message = match ? match[0] : "Validation error";
         } else if (data.includes("already exists")) {
-            message = "User already exists";
+            if (data.toLowerCase().includes("plant") || data.toLowerCase().includes("mac")) {
+                message = "A plant with this MAC address already exists";
+            } else if (data.toLowerCase().includes("user")) {
+                message = "User already exists";
+            } else {
+                message = "Already exists";
+            }
+        } else if (data.includes("not found") || data.includes("NotFound")) {
+            if (data.toLowerCase().includes("plant")) {
+                message = "Plant not found";
+            } else if (data.toLowerCase().includes("user")) {
+                message = "User not found";
+            } else {
+                message = "Resource not found";
+            }
         } else if (data.includes("Invalid")) {
             message = "Invalid credentials";
         } else {
@@ -37,10 +51,20 @@ export const getErrorMessage = (error: unknown): ApiError => {
         message = data.title;
     } else if (status === 401) {
         message = "Invalid email/username or password";
+    } else if (status === 403) {
+        message = "You don't have permission to do this";
+    } else if (status === 404) {
+        message = "Resource not found";
     } else if (status === 409) {
-        message = "User already exists";
+        if (data?.toLowerCase?.().includes("plant") || data?.toLowerCase?.().includes("mac")) {
+            message = "A plant with this MAC address already exists";
+        } else {
+            message = "User already exists";
+        }
     } else if (status === 400) {
         message = "Invalid input data";
+    } else if (status === 500) {
+        message = "Server error, please try again later";
     } else {
         message = "An error occurred";
     }
@@ -48,7 +72,6 @@ export const getErrorMessage = (error: unknown): ApiError => {
     return { status, message, errors: data?.errors };
 };
 
-// Minimal Axios error shape check (avoids importing axios just for the guard)
 function isAxiosError(error: unknown): error is {
     response?: { status: number; data: any };
     request?: unknown;

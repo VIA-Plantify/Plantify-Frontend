@@ -62,6 +62,8 @@ function avg(readings: SensorData[], key: keyof SensorData): number {
     return Math.round(vals.reduce((a, b) => a + b, 0) / vals.length);
 }
 
+const MLAPI = import.meta.env.VITE_MLAPI_URL;
+
 export function IdkMyPlant() {
     const navigate = useNavigate();
     const { theme } = useTheme();
@@ -315,7 +317,7 @@ Respond ONLY with valid JSON, no markdown:
                                 </div>
                             </div>
                             <div className={styles.card}>
-                                <div className={styles.cardLabel}>Height <span className={styles.badge}>5–30 cm</span></div>
+                                <div className={styles.cardLabel}> Height <span className={styles.badge}>5–30 cm</span></div>
                                 <div className={styles.sliderRow}>
                                     <input type="range" min={5} max={30} value={form.height}
                                            onChange={(e) => handleSlider("height", Number(e.target.value))}
@@ -391,6 +393,14 @@ Respond ONLY with valid JSON, no markdown:
                             <button className={styles.identifyBtn} onClick={handleAddPlant} disabled={isLoading}>
                                 {isLoading ? "Adding plant..." : " Add Plant & Start Monitoring"}
                             </button>
+                            <div className={styles.graphSection}>
+                                <img
+                                    src={`${MLAPI}/graph/indoor/pca`}
+                                    alt="Indoor PCA plant graph"
+                                    className={styles.graphImg}
+                                />
+                            </div>
+
                         </div>
                     </div>
                 </>
@@ -438,7 +448,7 @@ Respond ONLY with valid JSON, no markdown:
                     <div className={styles.waitingCard}>
                         <h2 className={styles.waitingTitle}>Analyzing your plant...</h2>
                         <p className={styles.waitingSubtitle}>
-                            Claude is processing {READINGS_REQUIRED} sensor readings
+                            Program is processing {READINGS_REQUIRED} sensor readings
                         </p>
                         <div className={styles.loadingBar}>
                             <div className={styles.loadingBarFill} />
@@ -466,7 +476,7 @@ Respond ONLY with valid JSON, no markdown:
                                 { label: "Temperature",    value: diagnosis.preset.optimalTemperature,    unit: "°C"},
                                 { label: "Air Humidity",   value: diagnosis.preset.optimalAirHumidity,    unit: "%"},
                                 { label: "Soil Humidity",  value: diagnosis.preset.optimalSoilHumidity,   unit: "%" },
-                                { label: "Light Intensity",value: diagnosis.preset.optimalLightIntensity, unit: "%" },
+                                { label: "Light Intensity",value: diagnosis.preset.optimalLightIntensity, unit: "" },
                             ].map((item) => (
                                 <div key={item.label} className={styles.resultCard}>
                                     <div className={styles.resultLabel}>{item.label}</div>
