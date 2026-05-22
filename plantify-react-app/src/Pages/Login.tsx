@@ -260,7 +260,6 @@ export function Login() {
                             <button className={styles.button2} type="submit" onClick={() => {handleLogin();}} disabled={isLoading}> {isLoading ? "Connecting in..." : "Connect" }
                             </button>
                             <p className={styles.color}>Don't have an account yet? <Link className={styles.link} to="/Register">Sign up</Link></p>
-                            <p><Link className={styles.link} to="/PlantInfo">Back up for now</Link></p>
                             <ThemeToggle/>
                         </>
                     )}
@@ -268,7 +267,6 @@ export function Login() {
                     {userData && (
                         <div>
                             <button className={styles.button2} onClick={handleLogout}>Logout</button>
-                            <p><Link className={styles.link} to="/PlantInfo">Back up for now</Link></p>
                         </div>
                     )}
                 </div>
